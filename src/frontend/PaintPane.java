@@ -68,10 +68,12 @@ public class PaintPane extends BorderPane {
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
+		//Creo un punto cada vez que hago click.
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
 		});
 
+		//Cuando suelto el mouse creo otro punto. Si había seleccionado algún botón para crear una figura, le paso el punto inicial y el final como argumentos al constructor.
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
 			if(startPoint == null) {
@@ -104,6 +106,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
+		//Esto hace que las coordenadas cambien cuando se mueve el mouse (y pone las de la figura si estoy sobre una).
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
@@ -121,6 +124,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		//Esto le da funcionalidad al botón de selección.
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
@@ -143,6 +147,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		//Esto hace que pueda arrastrar figuras.
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
@@ -173,6 +178,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		//Esto es el botón de borrar.
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				canvasState.deleteFigure(selectedFigure);
@@ -219,6 +225,7 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
+	//Función para determinar si hice click sobre una figura.
 	boolean figureBelongs(Figure figure, Point eventPoint) {
 		boolean found = false;
 		if(figure instanceof Rectangle) {
