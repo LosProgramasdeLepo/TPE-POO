@@ -7,13 +7,6 @@ public class Square extends Rectangle {
         super(topLeft, new Point(topLeft.x + size, topLeft.y + size));
     }
 
-    public Point getTopLeft() {
-        return getTopLeft();
-    }
-
-    public Point getBottomRight() {
-        return getBottomRight();
-    }
 
     @Override
     public String toString() {

@@ -1,5 +1,6 @@
 package backend;
 
+import backend.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
