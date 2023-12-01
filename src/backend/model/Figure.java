@@ -1,5 +1,6 @@
 package backend.model;
 
-public interface Figure {
+public abstract class Figure {
+    public abstract boolean figureBelongs(Point eventPoint);
 
 }
