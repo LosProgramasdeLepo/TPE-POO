@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Ellipse extends Figure {
 
-    protected final Point centerPoint;
+        protected final Point centerPoint;
     protected final double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
@@ -38,9 +38,9 @@ public class Ellipse extends Figure {
     }
 
     @Override
-    public void draw(GraphicsContext graphicsContext) {
-        graphicsContext.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
-        graphicsContext.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
+    public void draw(GraphicsContext gc) {
+        gc.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
+        gc.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
     }
 
 }
