@@ -170,4 +170,8 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
+	public StatusPane getStatusPane(){
+		return this.statusPane;
+	}
+
 }
