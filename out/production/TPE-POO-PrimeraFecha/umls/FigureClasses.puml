@@ -2,14 +2,30 @@
 'https://plantuml.com/class-diagram
 
 abstract class Figure{
-+ figureBelongs()
+
+{abstract} figureBelongs()
 }
 class Rectangle extends Figure{
-
++ getTopLeft()
++ getBottomRight()
++ toString()
++ figureBelongs()
 }
-class Square extends Rectangle
-class Ellipse extends Figure
-class Circe extends Ellipse
+class Square extends Rectangle{
++ toString()
+}
+class Ellipse extends Figure{
+   + getCenterPoint()
+   + getMayorAxis()
+   + getMinorAxis()
+   + figureBelongs()
+   + toString()
+}
+class Circe extends Ellipse{
+   + getRadius()
+   + figureBelongs()
+   + toString()
+}
 
 
 @enduml
