@@ -24,6 +24,7 @@ public abstract class Figure implements Movable, Drawable {
             point.move(deltaX, deltaY);
         }
     }
+    public abstract Figure createFrom(Point startPoint, Point endPoint);
 
     @Override
     public abstract void draw(GraphicsContext gc);
