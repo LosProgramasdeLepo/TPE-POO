@@ -81,7 +81,7 @@ public class PaintPane extends BorderPane {
 			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
 				return ;
 			}
-			Figure newFigure = null;
+			Figure newFigure;
 			if(rectangleButton.isSelected()) {
 				newFigure = new Rectangle(startPoint, endPoint);
 			}
@@ -100,7 +100,7 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 			figureColorMap.put(newFigure, fillColorPicker.getValue());
-			canvasState.addFigure(newFigure);
+			canvasState.add(newFigure);
 			startPoint = null;
 			redrawCanvas();
 		});
@@ -109,7 +109,7 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
-			for(Figure figure : canvasState.figures()) {
+			for(Figure figure : canvasState) {
 				if(figure.figureBelongs(eventPoint)) {
 					found = true;
 					label.append(figure);
@@ -127,7 +127,7 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				boolean found = false;
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for (Figure figure : canvasState.figures()) {
+				for (Figure figure : canvasState) {
 					if(figure.figureBelongs(eventPoint)) {
 						found = true;
 						selectedFigure = figure;
@@ -156,7 +156,7 @@ public class PaintPane extends BorderPane {
 
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
-				canvasState.deleteFigure(selectedFigure);
+				canvasState.remove(selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
 			}
@@ -168,7 +168,7 @@ public class PaintPane extends BorderPane {
 
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for(Figure figure : canvasState.figures()) {
+		for(Figure figure : canvasState) {
 			if(figure == selectedFigure) { gc.setStroke(DEFAULT_SELECTED_LINE_COLOR); }
 			else { gc.setStroke(DEFAULT_LINE_COLOR); }
 			gc.setFill(figureColorMap.get(figure));
