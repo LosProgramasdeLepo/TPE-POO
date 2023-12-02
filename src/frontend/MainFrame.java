@@ -1,17 +1,18 @@
 package frontend;
 
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import backend.CanvasState;
 
-public class MainFrame extends VBox {
+public class MainFrame extends BorderPane {
 
     public MainFrame(CanvasState canvasState) {
-        getChildren().add(new AppMenuBar());
+        AppMenuBar appMenuBar = new AppMenuBar();
         StatusPane statusPane = new StatusPane();
         EffectsPane effectsPane = new EffectsPane();
-        getChildren().add(new PaintPane(canvasState, statusPane, effectsPane));
-        getChildren().add(statusPane);
-        getChildren().add(effectsPane);
+        PaintPane paintPane = new PaintPane(canvasState, statusPane, effectsPane);
+        setTop(appMenuBar);
+        setLeft(paintPane);
+        setBottom(statusPane);
     }
 
 }
