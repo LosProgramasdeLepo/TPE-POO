@@ -1,6 +1,8 @@
 package backend.model;
 
-public class Ellipse extends Figure{
+import javafx.scene.canvas.GraphicsContext;
+
+public class Ellipse extends Figure {
 
     protected final Point centerPoint;
     protected final double sMayorAxis, sMinorAxis;
@@ -34,4 +36,11 @@ public class Ellipse extends Figure{
         return (((Math.pow(eventPoint.getX() - this.getCenterPoint().getX(), 2) / Math.pow(this.getsMayorAxis(), 2)) +
                 (Math.pow(eventPoint.getY() - this.getCenterPoint().getY(), 2) / Math.pow(this.getsMinorAxis(), 2))) <= 0.30);
     }
+
+    @Override
+    public void draw(GraphicsContext graphicsContext) {
+        graphicsContext.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
+        graphicsContext.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
+    }
+
 }

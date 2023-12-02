@@ -24,8 +24,9 @@ public class PaintPane extends BorderPane {
 	// Canvas y relacionados
 	Canvas canvas = new Canvas(800, 600);
 	GraphicsContext gc = canvas.getGraphicsContext2D();
-	Color lineColor = Color.BLACK;
-	Color defaultFillColor = Color.YELLOW;
+	Color DEFAULT_LINE_COLOR = Color.BLACK;
+	Color DEFAULT_FILL_COLOR = Color.YELLOW;
+	Color DEFAULT_SELECTED_LINE_COLOR = Color.RED;
 
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
@@ -36,7 +37,7 @@ public class PaintPane extends BorderPane {
 	ToggleButton deleteButton = new ToggleButton("Borrar");
 
 	// Selector de color de relleno
-	ColorPicker fillColorPicker = new ColorPicker(defaultFillColor);
+	ColorPicker fillColorPicker = new ColorPicker(DEFAULT_FILL_COLOR);
 
 	// Dibujar una figura
 	Point startPoint;
@@ -111,7 +112,7 @@ public class PaintPane extends BorderPane {
 			for(Figure figure : canvasState.figures()) {
 				if(figure.figureBelongs(eventPoint)) {
 					found = true;
-					label.append(figure.toString());
+					label.append(figure);
 				}
 			}
 			if(found) {
@@ -130,7 +131,7 @@ public class PaintPane extends BorderPane {
 					if(figure.figureBelongs(eventPoint)) {
 						found = true;
 						selectedFigure = figure;
-						label.append(figure.toString());
+						label.append(figure);
 					}
 				}
 				if (found) {
@@ -168,34 +169,10 @@ public class PaintPane extends BorderPane {
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState.figures()) {
-			if(figure == selectedFigure) {
-				gc.setStroke(Color.RED);
-			} else {
-				gc.setStroke(lineColor);
-			}
+			if(figure == selectedFigure) { gc.setStroke(DEFAULT_SELECTED_LINE_COLOR); }
+			else { gc.setStroke(DEFAULT_LINE_COLOR); }
 			gc.setFill(figureColorMap.get(figure));
-			if(figure instanceof Rectangle) {
-				Rectangle rectangle = (Rectangle) figure;
-				gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-						Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
-				gc.strokeRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
-						Math.abs(rectangle.getTopLeft().getX() - rectangle.getBottomRight().getX()), Math.abs(rectangle.getTopLeft().getY() - rectangle.getBottomRight().getY()));
-			} else if(figure instanceof Circle) {
-				Circle circle = (Circle) figure;
-				double diameter = circle.getRadius() * 2;
-				gc.fillOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
-				gc.strokeOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
-			} else if(figure instanceof Square) {
-				Square square = (Square) figure;
-				gc.fillRect(square.getTopLeft().getX(), square.getTopLeft().getY(),
-						Math.abs(square.getTopLeft().getX() - square.getBottomRight().getX()), Math.abs(square.getTopLeft().getY() - square.getBottomRight().getY()));
-				gc.strokeRect(square.getTopLeft().getX(), square.getTopLeft().getY(),
-						Math.abs(square.getTopLeft().getX() - square.getBottomRight().getX()), Math.abs(square.getTopLeft().getY() - square.getBottomRight().getY()));
-			} else if(figure instanceof Ellipse) {
-				Ellipse ellipse = (Ellipse) figure;
-				gc.strokeOval(ellipse.getCenterPoint().getX() - (ellipse.getsMayorAxis() / 2), ellipse.getCenterPoint().getY() - (ellipse.getsMinorAxis() / 2), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
-				gc.fillOval(ellipse.getCenterPoint().getX() - (ellipse.getsMayorAxis() / 2), ellipse.getCenterPoint().getY() - (ellipse.getsMinorAxis() / 2), ellipse.getsMayorAxis(), ellipse.getsMinorAxis());
-			}
+			figure.draw(gc);
 		}
 	}
 
