@@ -26,6 +26,6 @@ public abstract class Figure implements Movable, Drawable {
     }
 
     @Override
-    public abstract void draw(GraphicsContext graphicsContext);
+    public abstract void draw(GraphicsContext gc);
 
 }
