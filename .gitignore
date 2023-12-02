@@ -1,4 +1,5 @@
-/out
+/out/*
 /.idea/codeStyles
 /.idea/libraries/javafx_swt.xml
-/.idea
+/.idea/shelf
+*.iml
