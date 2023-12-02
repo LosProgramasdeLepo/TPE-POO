@@ -13,9 +13,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class PaintPane extends BorderPane {
 
 	// BackEnd
@@ -47,9 +44,6 @@ public class PaintPane extends BorderPane {
 
 	// StatusBar
 	StatusPane statusPane;
-
-	// Colores de relleno de cada figura
-	Map<Figure, Color> figureColorMap = new HashMap<>();
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -99,7 +93,7 @@ public class PaintPane extends BorderPane {
 			} else {
 				return ;
 			}
-			figureColorMap.put(newFigure, fillColorPicker.getValue()); //todo setter del color
+			newFigure.setFillColor(fillColorPicker.getValue());
 			canvasState.add(newFigure);
 			startPoint = null;
 			redrawCanvas();
@@ -171,7 +165,7 @@ public class PaintPane extends BorderPane {
 		for(Figure figure : canvasState) {
 			if(figure == selectedFigure) { gc.setStroke(DEFAULT_SELECTED_LINE_COLOR); }
 			else { gc.setStroke(DEFAULT_LINE_COLOR); }
-			gc.setFill(figureColorMap.get(figure)); //todo quitar el hashmap y agregar en el draw el setFill
+			gc.setFill(figure.getFillColor());
 			figure.draw(gc);
 		}
 	}
