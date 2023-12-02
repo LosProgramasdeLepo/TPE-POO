@@ -12,9 +12,11 @@ public abstract class FigureButton {
         this.canvasState= canvasState;
         this.paintPane= paintPane;
     }
-    public Figure createAndAddFigure(Point startPoint, Point endPoint){
+    public void createAndAddFigure(Point startPoint, Point endPoint){
         try {
-            //todo falta lo de agregar al canvas y settear el color.
+            Figure newFigure = createFigure(startPoint,endPoint);
+            canvasState.add(newFigure);
+            newFigure.setFillColor(paintPane.getColorFromPicker());
         }
         catch(Exception e){
             paintPane.getStatusPane().updateStatus(e.getMessage());
