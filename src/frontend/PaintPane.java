@@ -1,4 +1,5 @@
 package frontend;
+import backend.model.Point;
 import frontend.figureButtons.*;
 import backend.CanvasState;
 import backend.model.*;
@@ -10,14 +11,15 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class PaintPane extends BorderPane {
 
@@ -57,15 +59,23 @@ public class PaintPane extends BorderPane {
 	// EffectsBar
 	EffectsPane effectsPane;
 
-	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
+	// Set para figuras seleccionadas
+	private final Set<Figure> figureSelection = new HashSet<>();
+
+	public PaintPane(CanvasState canvasState, StatusPane statusPane, EffectsPane effectsPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
+		this.effectsPane = effectsPane;
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
+
+		HBox effectsBox = new HBox(10);
+		effectsBox.getChildren().add(effectsPane);
+
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
 		buttonsBox.getChildren().add(fillColorPicker);
@@ -114,6 +124,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		setTop(effectsBox);
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
@@ -182,6 +193,11 @@ public class PaintPane extends BorderPane {
 	public StatusPane getStatusPane(){
 		return this.statusPane;
 	}
+
+	public EffectsPane getEffectsPane() {
+		return this.effectsPane;
+	}
+
 	public Color getColorFromPicker(){
 		return fillColorPicker.getValue();
 	}
