@@ -1,30 +1,57 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-abstract class Figure{
+class Point implements Movable{
+    - double x
+    - double y
+    + void move()
+    + String toString()
+    + double getX()
+    + double getY()
+}
+Figure *-- Point
+abstract class Figure implements Movable, Drawable{
+- Color fillColor
+- Point[] points
 
-{abstract} figureBelongs()
+{abstract} figureBelongs(Point eventPoint)
++ void move()
++ Color getFillColor()
 }
 class Rectangle extends Figure{
-+ getTopLeft()
-+ getBottomRight()
-+ toString()
-+ figureBelongs()
+- Point topLeft
+- Point bottomRight
++ Point getTopLeft()
++ Point getBottomRight()
++ String toString()
++ boolean figureBelongs(Point eventPoint)
++ void draw()
 }
 class Square extends Rectangle{
-+ toString()
++ String toString()
 }
 class Ellipse extends Figure{
-   + getCenterPoint()
-   + getMayorAxis()
-   + getMinorAxis()
-   + figureBelongs()
-   + toString()
+    - Point centerPoint
+    - double sMayorAxis
+    -double sMinorAxis
+   + Point getCenterPoint()
+   + double getMayorAxis()
+   + double getMinorAxis()
+   + boolean figureBelongs(Point eventPoint)
+   + String toString()
+   + void draw()
 }
-class Circe extends Ellipse{
-   + getRadius()
-   + figureBelongs()
-   + toString()
+class Circle extends Ellipse{
+   + double getRadius()
+   + boolean figureBelongs(Point eventPoint)
+   + String toString()
+}
+
+interface Movable{
++ void move()
+}
+interface Drawable{
++ void draw(GraphicsContext gc)
 }
 
 
