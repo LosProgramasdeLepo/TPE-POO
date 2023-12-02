@@ -143,7 +143,7 @@ public class PaintPane extends BorderPane {
 		if(selectedButton == null){
 			return;
 		}
-		if(selectedButton != selectionButton) {
+		if(selectedButton != selectionButton && selectedButton != deleteButton) {
 			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 		}
 		startPoint = null;
