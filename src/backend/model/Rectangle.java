@@ -37,8 +37,8 @@ public class Rectangle extends Figure {
         gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), Math.abs(getTopLeft().getX() - getBottomRight().getX()), Math.abs(getTopLeft().getY() - getBottomRight().getY()));
     }
 
-    @Override
-    public Rectangle createFrom(Point startPoint, Point endPoint){
+
+    public static Rectangle createFrom(Point startPoint, Point endPoint){
         return new Rectangle(startPoint, endPoint);
     }
 

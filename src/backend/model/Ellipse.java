@@ -43,8 +43,7 @@ public class Ellipse extends Figure {
         gc.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
     }
 
-    @Override
-    public Ellipse createFrom(Point startPoint, Point endPoint){
+    public static Ellipse createFrom(Point startPoint, Point endPoint){
         Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
         double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
         double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
