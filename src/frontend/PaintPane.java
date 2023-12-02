@@ -27,6 +27,8 @@ public class PaintPane extends BorderPane {
 	// Canvas y relacionados
 	Canvas canvas = new Canvas(800, 600);
 	GraphicsContext gc = canvas.getGraphicsContext2D();
+
+	// Constantes de colores
 	Color DEFAULT_LINE_COLOR = Color.BLACK;
 	Color DEFAULT_FILL_COLOR = Color.YELLOW;
 	Color DEFAULT_SELECTED_LINE_COLOR = Color.RED;
@@ -77,7 +79,6 @@ public class PaintPane extends BorderPane {
 		circleButton.setUserData(new CircleButton(this, canvasState));
 		ellipseButton.setUserData(new EllipseButton(this, canvasState));
 
-		// Mouse events
 		canvas.setOnMousePressed(this::onMousePressed);
 		canvas.setOnMouseReleased(this::onMouseRelease);
 		canvas.setOnMouseMoved(this::onMouseMoved);
@@ -160,9 +161,10 @@ public class PaintPane extends BorderPane {
 	private void onMouseDragged(MouseEvent mouseEvent) {
 		if(selectionButton.isSelected()) {
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
-			double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
-			double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
+			double diffX = (eventPoint.getX() - startPoint.getX());
+			double diffY = (eventPoint.getY() - startPoint.getY());
 			if(selectedFigure != null) selectedFigure.move(diffX, diffY);
+			startPoint.move(diffX, diffY);
 			redrawCanvas();
 		}
 	}
