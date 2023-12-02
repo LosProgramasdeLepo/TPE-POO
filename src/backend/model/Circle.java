@@ -21,7 +21,7 @@ public class Circle extends Ellipse {
                 Math.pow(this.getCenterPoint().getY() - eventPoint.getY(), 2)) < this.getRadius());
     }
 
-    public static Circle createFrom(Point startPoint, Point endPoint){
+    public static Circle createFrom(Point startPoint, Point endPoint) {
         double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
         return new Circle(startPoint, circleRadius);
     }

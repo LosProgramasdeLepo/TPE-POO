@@ -31,6 +31,7 @@ public abstract class Figure implements Movable, Drawable, Effects {
             point.move(deltaX, deltaY);
         }
     }
+
     @Override
     public abstract void draw(GraphicsContext gc);
 
@@ -46,20 +47,22 @@ public abstract class Figure implements Movable, Drawable, Effects {
         return gradient;
     }
 
-    public void modifyShadow(boolean bool){
-        shadow = bool;
+    public void modifyShadow(boolean status){
+        shadow = status;
     }
-    public void modifyGradient(boolean bool){
-        gradient = bool;
+
+    public void modifyGradient(boolean status){
+        gradient = status;
     }
-    public void modifyBevel(boolean bool){
-        bevel = bool;
-    }
+
+    public void modifyBevel(boolean status) { bevel = status; }
 
     @Override
     public abstract void addShadow(GraphicsContext gc);
+
     @Override
     public abstract void addBevel(GraphicsContext gc);
+
     public void addGradient(GraphicsContext gc){
         draw(gc);
     }

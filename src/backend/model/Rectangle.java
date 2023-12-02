@@ -6,7 +6,6 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 
-
 public class Rectangle extends Figure {
 
     private final Point topLeft, bottomRight;
@@ -49,13 +48,12 @@ public class Rectangle extends Figure {
         gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), Math.abs(getTopLeft().getX() - getBottomRight().getX()), Math.abs(getTopLeft().getY() - getBottomRight().getY()));
     }
 
-
     public static Rectangle createFrom(Point startPoint, Point endPoint){
         return new Rectangle(startPoint, endPoint);
     }
 
     @Override
-    public void addShadow(GraphicsContext gc){
+    public void addShadow(GraphicsContext gc) {
         gc.setFill(Color.GRAY);
         gc.fillRect(this.getTopLeft().getX() + 10.0,
                 this.getTopLeft().getY() + 10.0,
@@ -63,8 +61,9 @@ public class Rectangle extends Figure {
                 Math.abs(this.getTopLeft().getY() - this.getBottomRight().getY()));
 
     }
+
     @Override
-    public void addBevel(GraphicsContext gc){
+    public void addBevel(GraphicsContext gc) {
         double x = this.getTopLeft().getX();
         double y = this.getTopLeft().getY();
         double width = Math.abs(x - this.getBottomRight().getX());
