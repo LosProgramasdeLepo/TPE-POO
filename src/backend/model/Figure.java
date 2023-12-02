@@ -16,6 +16,10 @@ public abstract class Figure implements Movable, Drawable {
         return fillColor;
     }
 
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
+    }
+
     public abstract boolean figureBelongs(Point eventPoint);
 
     @Override
