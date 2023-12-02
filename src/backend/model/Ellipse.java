@@ -1,6 +1,11 @@
 package backend.model;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.ArcType;
 
 public class Ellipse extends Figure {
 
@@ -39,6 +44,13 @@ public class Ellipse extends Figure {
 
     @Override
     public void draw(GraphicsContext gc) {
+        if(hasGradient()){
+            RadialGradient radialGradient = new RadialGradient(0, 0, 0.5, 0.5, 0.5, true,
+                    CycleMethod.NO_CYCLE,
+                    new Stop(0, getFillColor()),
+                    new Stop(1, getFillColor().invert()));
+            gc.setFill(radialGradient);
+        }
         gc.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
         gc.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
     }
@@ -48,6 +60,24 @@ public class Ellipse extends Figure {
         double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
         double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
         return new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
+    }
+
+    @Override
+    public void addShadow(GraphicsContext gc){
+        gc.setFill(Color.GRAY);
+        gc.fillOval(this.getCenterPoint().getX() - this.getsMayorAxis() + 10.0,
+                this.getCenterPoint().getY() - this.getsMinorAxis() + 10.0, this.sMayorAxis * 2, this.sMinorAxis * 2);
+    }
+
+    @Override
+    public void addBevel(GraphicsContext gc){
+        double arcX = this.getCenterPoint().getX() - this.getsMayorAxis();
+        double arcY = this.getCenterPoint().getY() - this.getsMinorAxis();
+        gc.setLineWidth(10);
+        gc.setStroke(Color.LIGHTGRAY);
+        gc.strokeArc(arcX, arcY, this.getsMayorAxis()*2, this.getsMinorAxis() * 2, 45, 180, ArcType.OPEN);
+        gc.setStroke(Color.BLACK);
+        gc.strokeArc(arcX, arcY, this.getsMayorAxis()*2, this.getsMinorAxis()*2, 225, 180, ArcType.OPEN);
     }
 
 }
