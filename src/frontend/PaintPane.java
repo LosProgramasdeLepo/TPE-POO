@@ -82,7 +82,7 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 			Figure newFigure;
-			if(rectangleButton.isSelected()) {
+			if(rectangleButton.isSelected()) { //todo cambiar con las tools
 				newFigure = new Rectangle(startPoint, endPoint);
 			}
 			else if(circleButton.isSelected()) {
@@ -99,7 +99,7 @@ public class PaintPane extends BorderPane {
 			} else {
 				return ;
 			}
-			figureColorMap.put(newFigure, fillColorPicker.getValue());
+			figureColorMap.put(newFigure, fillColorPicker.getValue()); //todo setter del color
 			canvasState.add(newFigure);
 			startPoint = null;
 			redrawCanvas();
@@ -171,7 +171,7 @@ public class PaintPane extends BorderPane {
 		for(Figure figure : canvasState) {
 			if(figure == selectedFigure) { gc.setStroke(DEFAULT_SELECTED_LINE_COLOR); }
 			else { gc.setStroke(DEFAULT_LINE_COLOR); }
-			gc.setFill(figureColorMap.get(figure));
+			gc.setFill(figureColorMap.get(figure)); //todo quitar el hashmap y agregar en el draw el setFill
 			figure.draw(gc);
 		}
 	}
