@@ -91,28 +91,7 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseReleased(this::onMouseRelease);
 		canvas.setOnMouseMoved(this::onMouseMoved);
 		canvas.setOnMouseDragged(this::onMouseDragged);
-
-		canvas.setOnMouseClicked(event -> {
-			if(selectionButton.isSelected()) {
-				Point eventPoint = new Point(event.getX(), event.getY());
-				boolean found = false;
-				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for (Figure figure : canvasState) {
-					if(figure.figureBelongs(eventPoint)) {
-						found = true;
-						selectedFigure = figure;
-						label.append(figure);
-					}
-				}
-				if (found) {
-					statusPane.updateStatus(label.toString());
-				} else {
-					selectedFigure = null;
-					statusPane.updateStatus("Ninguna figura encontrada");
-				}
-				redrawCanvas();
-			}
-		});
+		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
@@ -174,6 +153,28 @@ public class PaintPane extends BorderPane {
 			double diffY = (eventPoint.getY() - startPoint.getY());
 			if(selectedFigure != null) selectedFigure.move(diffX, diffY);
 			startPoint.move(diffX, diffY);
+			redrawCanvas();
+		}
+	}
+
+	private void getOnMouseClicked(MouseEvent mouseEvent) {
+		if(selectionButton.isSelected()) {
+			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
+			boolean found = false;
+			StringBuilder label = new StringBuilder("Se seleccionó: ");
+			for (Figure figure : canvasState) {
+				if(figure.figureBelongs(eventPoint)) {
+					found = true;
+					selectedFigure = figure;
+					label.append(figure);
+				}
+			}
+			if (found) {
+				statusPane.updateStatus(label.toString());
+			} else {
+				selectedFigure = null;
+				statusPane.updateStatus("Ninguna figura encontrada");
+			}
 			redrawCanvas();
 		}
 	}
