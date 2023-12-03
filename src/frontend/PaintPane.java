@@ -100,13 +100,15 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseDragged(this::onMouseDragged);
 		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
-		//selectionButton.setOnAction(event -> {
-		//	if(wasSelected){
-		//		wasSelected = false;
-		//		figureSelection.clear();
-		//		redrawCanvas();
-		//	}
-		//	wasSelected = true; });
+		selectionButton.setOnAction(event -> {
+			if(wasSelected) {
+				wasSelected = false;
+				figureSelection.clear();
+				redrawCanvas();
+			}
+			wasSelected = true;
+		});
+
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
 			figureSelection.clear();
@@ -121,24 +123,28 @@ public class PaintPane extends BorderPane {
 		ungroupButton.setOnAction(event -> { //todo esto no funciona
 			figureGroups.ungroup(figureSelection);
 		});
+
 		rectangleButton.setOnAction(event -> { //todo todos estos eventos son iguales, deberían ser un método aparte..
 			wasSelected = false;
 			selectionButton.setSelected(false);
 			figureSelection.clear();
 			redrawCanvas();
 		});
+
 		squareButton.setOnAction(event -> {
 			wasSelected = false;
 			selectionButton.setSelected(false);
 			figureSelection.clear();
 			redrawCanvas();
 		});
+
 		ellipseButton.setOnAction(event -> {
 			wasSelected = false;
 			selectionButton.setSelected(false);
 			figureSelection.clear();
 			redrawCanvas();
 		});
+
 		circleButton.setOnAction(event -> {
 			wasSelected = false;
 			selectionButton.setSelected(false);
@@ -163,23 +169,26 @@ public class PaintPane extends BorderPane {
 
 		Toggle selectedButton = tools.getSelectedToggle();
 		if(selectedButton == null) return;
+
 		if(selectedButton == selectionButton) {
+
 			figureSelection.clear();
 			if(startPoint.distanceTo(endPoint) > 1) {
 				Rectangle container = Rectangle.createFrom(startPoint, endPoint);
 				canvasState.figuresContainedIn(container, figureSelection);
-				if(figureSelection.isEmpty()) {statusPane.updateStatus("Ninguna figura encontrada");}
-				else{
+				System.out.println(figureSelection.size());
+				if(figureSelection.isEmpty()) { statusPane.updateStatus("Ninguna figura encontrada"); }
+				else {
 					for (Figure figure : figureSelection) {
 						if (figureGroups.findGroup(figure) != null) {
 							figureSelection.addAll(figureGroups.findGroup(figure));
 						}
+					}
+					if (figureSelection.size() == 1) { statusPane.updateStatus("Se seleccionó: %s".formatted(figureSelection.iterator().next())); }
+					else { statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size())); }
 				}
-				if (figureSelection.size() == 1) {statusPane.updateStatus("Se seleccionó: %s".formatted(selectedFigure));}
-				else {statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));}
-				}
-
 			}
+
 			else {
 				Figure topFigure = canvasState.getTopFigureAt(endPoint);
 				if (topFigure != null) {
@@ -192,11 +201,13 @@ public class PaintPane extends BorderPane {
 					statusPane.updateStatus(String.format("Se seleccionó %s", topFigure));
 				}
 			}
+
 		}
 
 		if(selectedButton != selectionButton && selectedButton != deleteButton && selectedButton != groupButton && selectedButton != ungroupButton) {
 			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 		}
+
         startPoint = null;
 		redrawCanvas();
 	}
@@ -224,7 +235,7 @@ public class PaintPane extends BorderPane {
 
 	private void getOnMouseClicked(MouseEvent mouseEvent) {
 		if(selectionButton.isSelected()) {
-			if(wasSelected){return;}
+			if(wasSelected) return;
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 			boolean found = false;
 			for (Figure figure : canvasState) {
@@ -235,7 +246,7 @@ public class PaintPane extends BorderPane {
 				}
 			}
 			if (found) {
-				if(figureGroups.findGroup(selectedFigure)!=null){
+				if(figureGroups.findGroup(selectedFigure) != null) {
 					figureSelection.addAll(figureGroups.findGroup(selectedFigure));
 				}
 				else {
