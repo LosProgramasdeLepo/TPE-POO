@@ -101,4 +101,28 @@ public class Ellipse extends Figure {
         gc.setLineWidth(1);
     }
 
+    @Override
+    public void rotateRight() {
+
+    }
+
+    @Override
+    public void flipHorizontally() {
+
+    }
+
+    @Override
+    public void flipVertically() {
+
+    }
+
+    @Override
+    public void scaleUp() {
+
+    }
+
+    @Override
+    public void scaleDown() {
+
+    }
 }

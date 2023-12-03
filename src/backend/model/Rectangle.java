@@ -6,6 +6,8 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 
+import java.awt.geom.AffineTransform;
+
 public class Rectangle extends Figure {
 
     private final Point topLeft, bottomRight;
@@ -22,6 +24,16 @@ public class Rectangle extends Figure {
 
     public Point getBottomRight() {
         return bottomRight;
+    }
+
+    private Point center() { return new Point(width()/2, height()/2); }
+
+    private double width() {
+        return bottomRight.getX() - topLeft.getX();
+    }
+
+    private double height() {
+        return bottomRight.getY() - topLeft.getY();
     }
 
     @Override
@@ -90,12 +102,33 @@ public class Rectangle extends Figure {
         gc.setLineWidth(1);
     }
 
-    private double width() {
-        return bottomRight.getX() - topLeft.getX();
+    @Override
+    public void rotateRight() {
+
     }
 
-    private double height() {
-        return bottomRight.getY() - topLeft.getY();
+    @Override
+    public void flipHorizontally() {
+        double tempX = topLeft.getX();
+        topLeft.move(bottomRight.getX() - topLeft.getX(), 0);
+        bottomRight.move(tempX - bottomRight.getX(), 0);
+    }
+
+    @Override
+    public void flipVertically() {
+        double tempY = topLeft.getY();
+        topLeft.move(0, bottomRight.getY() - topLeft.getY());
+        bottomRight.move(0, tempY - bottomRight.getY());
+    }
+
+    @Override
+    public void scaleUp() {
+
+    }
+
+    @Override
+    public void scaleDown() {
+
     }
 
 }

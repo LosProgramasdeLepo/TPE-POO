@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import static java.util.Objects.hash;
 
-public abstract class Figure implements Movable, Drawable, Effects {
+public abstract class Figure implements Movable, Drawable, Effects, Transformable {
     private boolean shadow, bevel, gradient;
     private final Point[] points;
     private Color fillColor;
