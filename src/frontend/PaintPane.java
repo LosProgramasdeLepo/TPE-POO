@@ -229,12 +229,12 @@ public class PaintPane extends BorderPane {
 			shadeBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 				public void changed(ObservableValue<? extends Boolean> ov,
 									Boolean old_val, Boolean new_val) {
-					if(selectionButton.isSelected() && selectedFigure!=null){
+					if(selectionButton.isSelected() && !figureSelection.isEmpty()){
 						if(new_val){
-							selectedFigure.modifyShadow(true);
+							figureSelection.modifyShadow(true);
 						}
 						if(!new_val){
-							selectedFigure.modifyShadow(false);
+							figureSelection.modifyShadow(false);
 						}
 					}
 					redrawCanvas();
@@ -244,12 +244,12 @@ public class PaintPane extends BorderPane {
 			bevelBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 				@Override
 				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-					if(selectionButton.isSelected() && selectedFigure!=null){
+					if(selectionButton.isSelected() && !figureSelection.isEmpty()){
 						if(t1){
-							selectedFigure.modifyBevel(true);
+							figureSelection.modifyBevel(true);
 						}
 						if(!t1){
-							selectedFigure.modifyBevel(false);
+							figureSelection.modifyBevel(false);
 						}
 					}
 					redrawCanvas();
@@ -259,12 +259,12 @@ public class PaintPane extends BorderPane {
 			gradientBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 				@Override
 				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-					if(selectionButton.isSelected() && selectedFigure!=null){
+					if(selectionButton.isSelected() && !figureSelection.isEmpty()){
 						if(t1){
-							selectedFigure.modifyGradient(true);
+							figureSelection.modifyGradient(true);
 						}
 						if(!t1){
-							selectedFigure.modifyGradient(false);
+							figureSelection.modifyGradient(false);
 						}
 					}
 					redrawCanvas();
