@@ -93,11 +93,9 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
 		deleteButton.setOnAction(event -> {
-			if (selectedFigure != null) {
-				canvasState.remove(selectedFigure);
-				selectedFigure = null;
-				redrawCanvas();
-			}
+			canvasState.removeAll(figureSelection);
+			figureSelection.clear();
+			redrawCanvas();
 		});
 
 		setTop(effectsPane);
