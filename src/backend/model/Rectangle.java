@@ -36,6 +36,14 @@ public class Rectangle extends Figure {
     }
 
     @Override
+    public boolean isContainedIn(Rectangle rectangle) {
+        return topLeft.getX() >= rectangle.topLeft.getX() &&
+                topLeft.getY() >= rectangle.topLeft.getY() &&
+                bottomRight.getX() <= rectangle.bottomRight.getX() &&
+                bottomRight.getY() <= rectangle.bottomRight.getY();
+    }
+
+    @Override
     public void draw(GraphicsContext gc) {
         if(hasGradient()) {
             LinearGradient linearGradient = new LinearGradient(0, 0, 1, 0, true,
@@ -44,12 +52,12 @@ public class Rectangle extends Figure {
                     new Stop(1, getFillColor().invert()));
             gc.setFill(linearGradient);
         }
-        else{
+        else {
             gc.setFill(getFillColor());
         }
-        gc.fillRect(getTopLeft().getX(), getTopLeft().getY(), Math.abs(getTopLeft().getX() - getBottomRight().getX()), Math.abs(getTopLeft().getY() - getBottomRight().getY()));
-        if(!this.hasBevel()){
-        gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), Math.abs(getTopLeft().getX() - getBottomRight().getX()), Math.abs(getTopLeft().getY() - getBottomRight().getY()));
+        gc.fillRect(getTopLeft().getX(), getTopLeft().getY(), width(), height());
+        if(!this.hasBevel()) {
+            gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), width(), height());
         }
     }
 
@@ -80,6 +88,14 @@ public class Rectangle extends Figure {
         gc.setStroke(Color.BLACK);
         gc.strokeLine(x + width, y, x + width, y + height);
         gc.strokeLine(x, y + height, x + width, y + height);
+    }
+
+    private double width() {
+        return bottomRight.getX() - topLeft.getX();
+    }
+
+    private double height() {
+        return bottomRight.getY() - topLeft.getY();
     }
 
 }

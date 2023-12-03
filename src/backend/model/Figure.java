@@ -25,6 +25,8 @@ public abstract class Figure implements Movable, Drawable, Effects {
 
     public abstract boolean figureBelongs(Point eventPoint);
 
+    public abstract boolean isContainedIn(Rectangle rectangle);
+
     @Override
     public void move(double deltaX, double deltaY) {
         for(Point point : points) {

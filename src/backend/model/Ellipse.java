@@ -9,7 +9,7 @@ import javafx.scene.shape.ArcType;
 
 public class Ellipse extends Figure {
 
-        protected final Point centerPoint;
+    protected final Point centerPoint;
     protected final double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
@@ -40,6 +40,16 @@ public class Ellipse extends Figure {
     public boolean figureBelongs(Point eventPoint) {
         return (((Math.pow(eventPoint.getX() - this.getCenterPoint().getX(), 2) / Math.pow(this.getsMayorAxis(), 2)) +
                 (Math.pow(eventPoint.getY() - this.getCenterPoint().getY(), 2) / Math.pow(this.getsMinorAxis(), 2))) <= 0.30);
+    }
+
+    @Override
+    public boolean isContainedIn(Rectangle rectangle) {
+        Point topLeft = rectangle.getTopLeft();
+        Point bottomRight = rectangle.getBottomRight();
+        return topLeft.getX() <= centerPoint.getX() - sMayorAxis/2 &&
+                topLeft.getY() <= centerPoint.getY() - sMinorAxis/2 &&
+                bottomRight.getX() >= centerPoint.getX() + sMayorAxis/2 &&
+                bottomRight.getY() >= centerPoint.getY() + sMinorAxis/2;
     }
 
     @Override
