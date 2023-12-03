@@ -44,6 +44,9 @@ public class Rectangle extends Figure {
                     new Stop(1, getFillColor().invert()));
             gc.setFill(linearGradient);
         }
+        else{
+            gc.setFill(getFillColor());
+        }
         gc.fillRect(getTopLeft().getX(), getTopLeft().getY(), Math.abs(getTopLeft().getX() - getBottomRight().getX()), Math.abs(getTopLeft().getY() - getBottomRight().getY()));
         gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), Math.abs(getTopLeft().getX() - getBottomRight().getX()), Math.abs(getTopLeft().getY() - getBottomRight().getY()));
     }
@@ -64,17 +67,13 @@ public class Rectangle extends Figure {
 
     @Override
     public void addBevel(GraphicsContext gc) {
-        double x = this.getTopLeft().getX();
-        double y = this.getTopLeft().getY();
-        double width = Math.abs(x - this.getBottomRight().getX());
-        double height = Math.abs(y - this.getBottomRight().getY());
         gc.setLineWidth(10);
         gc.setStroke(Color.LIGHTGRAY);
-        gc.strokeLine(x, y, x + width, y);
-        gc.strokeLine(x, y, x, y + height);
-        gc.setStroke(Color.BLACK);
-        gc.strokeLine(x + width, y, x + width, y + height);
-        gc.strokeLine(x, y + height, x + width, y + height);
+        gc.strokeLine(getTopLeft().getX(), getTopLeft().getY(), getBottomRight().getX(), getTopLeft().getY());
+        gc.strokeLine(getTopLeft().getX(), getTopLeft().getY(), getTopLeft().getX(), getBottomRight().getY());
+        //gc.setStroke(Color.BLACK);
+        //gc.strokeLine(x + width, y, x + width, y + height);
+        //gc.strokeLine(x, y + height, x + width, y + height);
     }
 
 }

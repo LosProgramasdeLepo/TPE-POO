@@ -170,6 +170,9 @@ public class PaintPane extends BorderPane {
 				}
 			}
 			if (found) {
+				effectsPane.shadeBox.setSelected(selectedFigure.hasShadow());
+				effectsPane.gradientBox.setSelected(selectedFigure.hasGradient());
+				effectsPane.bevelBox.setSelected(selectedFigure.hasBevel());
 				statusPane.updateStatus(label.toString());
 			} else {
 				selectedFigure = null;
@@ -184,7 +187,12 @@ public class PaintPane extends BorderPane {
 		for(Figure figure : canvasState) {
 			if(figure == selectedFigure) { gc.setStroke(DEFAULT_SELECTED_LINE_COLOR); }
 			else { gc.setStroke(DEFAULT_LINE_COLOR); }
-			gc.setFill(figure.getFillColor());
+			if(figure.hasShadow()){
+				figure.addShadow(gc);
+			}
+			if(figure.hasBevel()){
+				figure.addBevel(gc);
+			}
 			figure.draw(gc);
 		}
 	}

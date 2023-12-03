@@ -28,4 +28,6 @@ public class EffectsPane extends HBox {
         setPrefWidth(100);
     }
 
+
+
 }

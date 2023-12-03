@@ -51,6 +51,9 @@ public class Ellipse extends Figure {
                     new Stop(1, getFillColor().invert()));
             gc.setFill(radialGradient);
         }
+        else{
+            gc.setFill(this.getFillColor());
+        }
         gc.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
         gc.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
     }
@@ -65,19 +68,20 @@ public class Ellipse extends Figure {
     @Override
     public void addShadow(GraphicsContext gc) {
         gc.setFill(Color.GRAY);
-        gc.fillOval(this.getCenterPoint().getX() - this.getsMayorAxis() + 10.0,
-                this.getCenterPoint().getY() - this.getsMinorAxis() + 10.0, this.sMayorAxis * 2, this.sMinorAxis * 2);
+        gc.fillOval(this.getCenterPoint().getX() - this.getsMayorAxis()/2 + 10.0,
+                this.getCenterPoint().getY() - this.getsMinorAxis()/2 + 10.0, this.sMayorAxis, this.sMinorAxis );
     }
 
     @Override
     public void addBevel(GraphicsContext gc) {
-        double arcX = this.getCenterPoint().getX() - this.getsMayorAxis();
-        double arcY = this.getCenterPoint().getY() - this.getsMinorAxis();
+        double arcX = this.getCenterPoint().getX() - this.getsMayorAxis()/2;
+        double arcY = this.getCenterPoint().getY() - this.getsMinorAxis()/2;
         gc.setLineWidth(10);
         gc.setStroke(Color.LIGHTGRAY);
-        gc.strokeArc(arcX, arcY, this.getsMayorAxis()*2, this.getsMinorAxis() * 2, 45, 180, ArcType.OPEN);
+        gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 90, 180, ArcType.OPEN);
         gc.setStroke(Color.BLACK);
-        gc.strokeArc(arcX, arcY, this.getsMayorAxis()*2, this.getsMinorAxis() * 2, 225, 180, ArcType.OPEN);
+        gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 90, -90, ArcType.OPEN);
+
     }
 
 }
