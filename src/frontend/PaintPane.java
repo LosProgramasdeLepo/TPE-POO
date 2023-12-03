@@ -265,7 +265,7 @@ public class PaintPane extends BorderPane {
 			if(figure.hasBevel()){
 				figure.addBevel(gc);
 			}
-		figure.draw(gc);
+			figure.draw(gc);
 		}
 	}
 
@@ -296,50 +296,41 @@ public class PaintPane extends BorderPane {
 			setStyle("-fx-background-color: #999");
 			setPrefWidth(100);
 
-			shadeBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-				public void changed(ObservableValue<? extends Boolean> ov,
-									Boolean old_val, Boolean new_val) {
-					if(!figureSelection.isEmpty()){
-						if(new_val){
-							figureSelection.modifyShadow(true);
-						}
-						if(!new_val){
-							figureSelection.modifyShadow(false);
-						}
-					}
-					redrawCanvas();
-				}
-			});
+			shadeBox.selectedProperty().addListener((ov, old_val, new_val) -> {
+                if(!figureSelection.isEmpty()){
+                    if(new_val){
+                        figureSelection.modifyShadow(true);
+                    }
+                    if(!new_val){
+                        figureSelection.modifyShadow(false);
+                    }
+                }
+                redrawCanvas();
+            });
 
-			bevelBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-				@Override
-				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-					if(!figureSelection.isEmpty()){
-						if(t1){
-							figureSelection.modifyBevel(true);
-						}
-						if(!t1){
-							figureSelection.modifyBevel(false);
-						}
-					}
-					redrawCanvas();
-				}
-			});
+			bevelBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+                if(!figureSelection.isEmpty()){
+                    if(t1){
+                        figureSelection.modifyBevel(true);
+                    }
+                    if(!t1){
+                        figureSelection.modifyBevel(false);
+                    }
+                }
+                redrawCanvas();
+            });
 
-			gradientBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-				@Override
-				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-					if(!figureSelection.isEmpty()){
-						if(t1){
-							figureSelection.modifyGradient(true);
-						}
-						if(!t1){
-							figureSelection.modifyGradient(false);
-						}
-					}
-					redrawCanvas();
-				}
-			});
+			gradientBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+                if(!figureSelection.isEmpty()){
+                    if(t1){
+                        figureSelection.modifyGradient(true);
+                    }
+                    if(!t1){
+                        figureSelection.modifyGradient(false);
+                    }
+                }
+                redrawCanvas();
+            });
 
 		}
 

@@ -56,9 +56,8 @@ public class Rectangle extends Figure {
             gc.setFill(getFillColor());
         }
         gc.fillRect(getTopLeft().getX(), getTopLeft().getY(), width(), height());
-        if(!this.hasBevel()) {
-            gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), width(), height());
-        }
+        gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), width(), height());
+
     }
 
     public static Rectangle createFrom(Point startPoint, Point endPoint){
