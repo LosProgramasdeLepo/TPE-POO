@@ -3,6 +3,10 @@ package backend.model;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+
+import static java.util.Objects.hash;
+
 public abstract class Figure implements Movable, Drawable, Effects {
     private boolean shadow, bevel, gradient;
     private final Point[] points;
@@ -67,6 +71,12 @@ public abstract class Figure implements Movable, Drawable, Effects {
 
     public void addGradient(GraphicsContext gc){
         draw(gc);
+    }
+
+
+    @Override
+    public int hashCode(){
+        return hash(Arrays.hashCode(this.points), this.bevel, this.shadow, this.gradient, this.fillColor);
     }
 
 }

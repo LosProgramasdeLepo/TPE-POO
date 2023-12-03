@@ -52,8 +52,13 @@ public class PaintPane extends BorderPane {
 	// Dibujar una figura
 	Point startPoint;
 
-	// Seleccionar una figura
+	// Seleccionar una figura //todo quitarlo
 	Figure selectedFigure;
+	// Set para figuras seleccionadas
+	FigureSelection figureSelection = new FigureSelection();
+
+	// Grupos de figuras agrupadas
+	FigureGroups figureGroups = new FigureGroups();
 
 	// StatusBar
 	StatusPane statusPane;
@@ -61,11 +66,8 @@ public class PaintPane extends BorderPane {
 	// EffectsBar
 	EffectsPane effectsPane = new EffectsPane();
 
-	// Set para figuras seleccionadas
-	FigureSelection figureSelection = new FigureSelection();
 
-	// Grupos de figuras
-	FigureGroups figureGroups = new FigureGroups();
+	private boolean wasSelected;
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -98,9 +100,11 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseDragged(this::onMouseDragged);
 		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
+		selectionButton.setOnAction(event -> { wasSelected = true; });
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
 			figureSelection.clear();
+			wasSelected = false;
 			redrawCanvas();
 		});
 
@@ -108,8 +112,32 @@ public class PaintPane extends BorderPane {
 			figureGroups.group(figureSelection);
 		});
 
-		ungroupButton.setOnAction(event -> {
+		ungroupButton.setOnAction(event -> { //todo esto no funciona
 			figureGroups.ungroup(figureSelection);
+		});
+		rectangleButton.setOnAction(event -> { //todo todos estos eventos son iguales, deberían ser un método aparte..
+			wasSelected = false;
+			selectionButton.setSelected(false);
+			figureSelection.clear();
+			redrawCanvas();
+		});
+		squareButton.setOnAction(event -> {
+			wasSelected = false;
+			selectionButton.setSelected(false);
+			figureSelection.clear();
+			redrawCanvas();
+		});
+		ellipseButton.setOnAction(event -> {
+			wasSelected = false;
+			selectionButton.setSelected(false);
+			figureSelection.clear();
+			redrawCanvas();
+		});
+		circleButton.setOnAction(event -> {
+			wasSelected = false;
+			selectionButton.setSelected(false);
+			figureSelection.clear();
+			redrawCanvas();
 		});
 
 		setTop(effectsPane);
@@ -131,14 +159,26 @@ public class PaintPane extends BorderPane {
 		if(selectedButton == null) return;
 
 		if(selectedButton == selectionButton) {
-			figureSelection.clear();
+			//figureSelection.clear();
 			if(startPoint.distanceTo(endPoint) > 1) {
 				Rectangle container = Rectangle.createFrom(startPoint, endPoint);
 				canvasState.figuresContainedIn(container, figureSelection);
-				System.out.println(figureSelection.size());
-				if(figureSelection.isEmpty()) statusPane.updateStatus("Ninguna figura encontrada");
-				if(figureSelection.size() == 1) statusPane.updateStatus("Se seleccionó: %s".formatted(selectedFigure));
+				if(figureSelection.isEmpty()) {statusPane.updateStatus("Ninguna figura encontrada");}
+				else{
+					for (Figure figure : figureSelection) {
+						if (figureGroups.findGroup(figure) != null) {
+							figureSelection.addAll(figureGroups.findGroup(figure));
+						}
+				}
+				if (figureSelection.size() == 1) {
+					statusPane.updateStatus("Se seleccionó: %s".formatted(selectedFigure));
+				}
+				if(groupButton.isSelected()){
+					figureGroups.add(figureSelection);
+				}
 				statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));
+				}
+
 			}
 			else {
 				Figure topFigure = canvasState.getTopFigureAt(endPoint);
@@ -157,7 +197,6 @@ public class PaintPane extends BorderPane {
 		if(selectedButton != selectionButton && selectedButton != deleteButton && selectedButton != groupButton && selectedButton != ungroupButton) {
 			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 		}
-
         startPoint = null;
 		redrawCanvas();
 	}
@@ -194,12 +233,19 @@ public class PaintPane extends BorderPane {
 				}
 			}
 			if (found) {
-				effectsPane.shadeBox.setSelected(selectedFigure.hasShadow());
-				effectsPane.gradientBox.setSelected(selectedFigure.hasGradient());
-				effectsPane.bevelBox.setSelected(selectedFigure.hasBevel());
+				if(figureGroups.findGroup(selectedFigure)!=null){
+					figureSelection.addAll(figureGroups.findGroup(selectedFigure));
+				}
+				else {
+					effectsPane.shadeBox.setSelected(selectedFigure.hasShadow());
+					effectsPane.gradientBox.setSelected(selectedFigure.hasGradient());
+					effectsPane.bevelBox.setSelected(selectedFigure.hasBevel());
+				}
 			} else {
 				selectedFigure = null;
+				figureSelection.clear();
 			}
+			selectionButton.setSelected(false);
 			redrawCanvas();
 		}
 	}
@@ -248,7 +294,7 @@ public class PaintPane extends BorderPane {
 			shadeBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 				public void changed(ObservableValue<? extends Boolean> ov,
 									Boolean old_val, Boolean new_val) {
-					if(selectionButton.isSelected() && !figureSelection.isEmpty()){
+					if(!figureSelection.isEmpty()){
 						if(new_val){
 							figureSelection.modifyShadow(true);
 						}
@@ -263,7 +309,7 @@ public class PaintPane extends BorderPane {
 			bevelBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 				@Override
 				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-					if(selectionButton.isSelected() && !figureSelection.isEmpty()){
+					if(!figureSelection.isEmpty()){
 						if(t1){
 							figureSelection.modifyBevel(true);
 						}
@@ -278,7 +324,7 @@ public class PaintPane extends BorderPane {
 			gradientBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 				@Override
 				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-					if(selectionButton.isSelected() && !figureSelection.isEmpty()){
+					if(!figureSelection.isEmpty()){
 						if(t1){
 							figureSelection.modifyGradient(true);
 						}

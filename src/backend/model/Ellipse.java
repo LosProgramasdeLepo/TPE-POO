@@ -94,7 +94,7 @@ public class Ellipse extends Figure {
         gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 45, 180, ArcType.OPEN);
         gc.setStroke(Color.BLACK);
         gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 225, 180, ArcType.OPEN);
-
+        gc.setLineWidth(1);
     }
 
 }

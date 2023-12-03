@@ -88,6 +88,7 @@ public class Rectangle extends Figure {
         gc.setStroke(Color.BLACK);
         gc.strokeLine(x + width, y, x + width, y + height);
         gc.strokeLine(x, y + height, x + width, y + height);
+        gc.setLineWidth(1);
     }
 
     private double width() {
