@@ -54,8 +54,11 @@ public class Ellipse extends Figure {
         else{
             gc.setFill(this.getFillColor());
         }
-        gc.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
         gc.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
+
+        if(!this.hasBevel()) {
+            gc.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
+        }
     }
 
     public static Ellipse createFrom(Point startPoint, Point endPoint) {
@@ -78,9 +81,9 @@ public class Ellipse extends Figure {
         double arcY = this.getCenterPoint().getY() - this.getsMinorAxis()/2;
         gc.setLineWidth(10);
         gc.setStroke(Color.LIGHTGRAY);
-        gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 90, 180, ArcType.OPEN);
+        gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 45, 180, ArcType.OPEN);
         gc.setStroke(Color.BLACK);
-        gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 90, -90, ArcType.OPEN);
+        gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 225, 180, ArcType.OPEN);
 
     }
 
