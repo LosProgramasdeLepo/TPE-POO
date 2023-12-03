@@ -17,7 +17,7 @@ public class Point implements Movable {
         return y;
     }
 
-    public double distanceBetween(Point o) {
+    public double distanceTo(Point o) {
         return Math.sqrt(Math.pow((x - o.x), 2) + Math.pow((y - o.y), 2));
     }
 

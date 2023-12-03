@@ -115,20 +115,18 @@ public class PaintPane extends BorderPane {
 
 	private void onMouseRelease(MouseEvent mouseEvent) {
 		Point endPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
-		if(startPoint == null) {
-			return;
-		}
-		if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
-			return;
-		}
+		if(startPoint == null) return;
+		if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) return;
 		Toggle selectedButton = tools.getSelectedToggle();
-		if(selectedButton == null){
-			return;
-		}
+		if(selectedButton == null) return;
 		if(selectedButton != selectionButton && selectedButton != deleteButton) {
 			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 		}
-		startPoint = null;
+		if(startPoint.distanceTo(endPoint) > 1) {
+			Rectangle container = Rectangle.createFrom(startPoint, endPoint);
+			int count = 0;
+		}
+        startPoint = null;
 		redrawCanvas();
 	}
 

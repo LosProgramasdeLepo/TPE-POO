@@ -36,6 +36,12 @@ public class Rectangle extends Figure {
     }
 
     @Override
+    public boolean isContainedIn(Rectangle rectangle) {
+        return topLeft.getX() <= rectangle.topLeft.getX() && topLeft.getY() <= rectangle.topLeft.getY()
+                && rectangle.bottomRight.getX() <= bottomRight.getX() && rectangle.bottomRight.getY() <= bottomRight.getY();
+    }
+
+    @Override
     public void draw(GraphicsContext gc) {
         if(hasGradient()) {
             LinearGradient linearGradient = new LinearGradient(0, 0, 1, 0, true,
