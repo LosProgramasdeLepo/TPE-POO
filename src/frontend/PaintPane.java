@@ -196,7 +196,7 @@ public class PaintPane extends BorderPane {
 			if(figure.hasBevel()){
 				figure.addBevel(gc);
 			}
-			figure.draw(gc);
+		figure.draw(gc);
 		}
 	}
 
