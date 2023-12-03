@@ -17,6 +17,10 @@ public class Point implements Movable {
         return y;
     }
 
+    public double distanceBetween(Point o) {
+        return Math.sqrt(Math.pow((x - o.x), 2) + Math.pow((y - o.y), 2));
+    }
+
     @Override
     public String toString() {
         return String.format("{%.2f , %.2f}", x, y);
