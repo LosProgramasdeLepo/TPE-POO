@@ -1,6 +1,7 @@
 package frontend;
 
 import backend.CanvasState;
+import backend.FigureGroups;
 import backend.FigureSelection;
 import backend.model.Figure;
 import backend.model.Point;
@@ -41,6 +42,8 @@ public class PaintPane extends BorderPane {
 	final ToggleButton squareButton = new ToggleButton("Cuadrado");
 	final ToggleButton ellipseButton = new ToggleButton("Elipse");
 	final ToggleButton deleteButton = new ToggleButton("Borrar");
+	final ToggleButton groupButton = new ToggleButton("Agrupar");
+	final ToggleButton ungroupButton = new ToggleButton("Desagrupar");
 	final ToggleGroup tools = new ToggleGroup();
 
 	// Selector de color de relleno
@@ -61,11 +64,14 @@ public class PaintPane extends BorderPane {
 	// Set para figuras seleccionadas
 	FigureSelection figureSelection = new FigureSelection();
 
+	// Grupos de figuras
+	FigureGroups figureGroups = new FigureGroups();
+
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
+		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, groupButton, ungroupButton};
 
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -96,6 +102,14 @@ public class PaintPane extends BorderPane {
 			canvasState.removeAll(figureSelection);
 			figureSelection.clear();
 			redrawCanvas();
+		});
+
+		groupButton.setOnAction(event -> {
+			figureGroups.group(figureSelection);
+		});
+
+		ungroupButton.setOnAction(event -> {
+			figureGroups.ungroup(figureSelection);
 		});
 
 		setTop(effectsPane);
@@ -129,13 +143,18 @@ public class PaintPane extends BorderPane {
 			else {
 				Figure topFigure = canvasState.getTopFigureAt(endPoint);
 				if (topFigure != null) {
-					figureSelection.add(topFigure);
+					if(figureGroups.findGroup(topFigure) != null) {
+						figureSelection = figureGroups.findGroup(topFigure);
+					}
+					else {
+						figureSelection.add(topFigure);
+					}
 					statusPane.updateStatus(String.format("Se seleccionó %s", topFigure));
 				}
 			}
 		}
 
-		if(selectedButton != selectionButton && selectedButton != deleteButton) {
+		if(selectedButton != selectionButton && selectedButton != deleteButton && selectedButton != groupButton && selectedButton != ungroupButton) {
 			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 		}
 
