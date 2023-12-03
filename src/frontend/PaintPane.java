@@ -7,8 +7,6 @@ import backend.model.Figure;
 import backend.model.Point;
 import backend.model.Rectangle;
 import frontend.figureButtons.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -52,8 +50,6 @@ public class PaintPane extends BorderPane {
 	// Dibujar una figura
 	Point startPoint;
 
-	// Seleccionar una figura //todo quitarlo
-	Figure selectedFigure;
 	// Set para figuras seleccionadas
 	FigureSelection figureSelection = new FigureSelection();
 
@@ -66,8 +62,7 @@ public class PaintPane extends BorderPane {
 	// EffectsBar
 	EffectsPane effectsPane = new EffectsPane();
 
-
-	private boolean wasSelected = false;
+	private boolean selectionActive = false;
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -101,18 +96,20 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
 		selectionButton.setOnAction(event -> {
-			if(wasSelected) {
-				wasSelected = false;
+			if(selectionActive) {
+				//Si había una selección activa, la saco
+				selectionActive = false;
 				figureSelection.clear();
 				redrawCanvas();
 			}
-			wasSelected = true;
+			//Si no, empiezo una
+			selectionActive = true;
 		});
 
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
 			figureSelection.clear();
-			wasSelected = false;
+			selectionActive = false;
 			redrawCanvas();
 		});
 
@@ -125,28 +122,28 @@ public class PaintPane extends BorderPane {
 		});
 
 		rectangleButton.setOnAction(event -> { //todo todos estos eventos son iguales, deberían ser un método aparte..
-			wasSelected = false;
+			selectionActive = false;
 			selectionButton.setSelected(false);
 			figureSelection.clear();
 			redrawCanvas();
 		});
 
 		squareButton.setOnAction(event -> {
-			wasSelected = false;
+			selectionActive = false;
 			selectionButton.setSelected(false);
 			figureSelection.clear();
 			redrawCanvas();
 		});
 
 		ellipseButton.setOnAction(event -> {
-			wasSelected = false;
+			selectionActive = false;
 			selectionButton.setSelected(false);
 			figureSelection.clear();
 			redrawCanvas();
 		});
 
 		circleButton.setOnAction(event -> {
-			wasSelected = false;
+			selectionActive = false;
 			selectionButton.setSelected(false);
 			figureSelection.clear();
 			redrawCanvas();
@@ -170,31 +167,39 @@ public class PaintPane extends BorderPane {
 		Toggle selectedButton = tools.getSelectedToggle();
 		if(selectedButton == null) return;
 
+		//Si activé el botón de selección...
 		if(selectedButton == selectionButton) {
-
+			//Debo sacar lo seleccionado
 			figureSelection.clear();
 			if(startPoint.distanceTo(endPoint) > 1) {
 				Rectangle container = Rectangle.createFrom(startPoint, endPoint);
+				//Modifica figureSelection directamente
 				canvasState.figuresContainedIn(container, figureSelection);
-				System.out.println(figureSelection.size());
-				if(figureSelection.isEmpty()) { statusPane.updateStatus("Ninguna figura encontrada"); }
+				//Si la colección de figuras seleccionadas está vacía, no se encontró ninguna
+				if(figureSelection.isEmpty()) statusPane.updateStatus("Ninguna figura encontrada");
+				//En otro caso, hay una o más
 				else {
+					//Recorro las figuras seleccionadas
 					for (Figure figure : figureSelection) {
+						//Si la figura actual pertenece a un grupo, añado a la selección a todas las figuras de ese grupo
 						if (figureGroups.findGroup(figure) != null) {
 							figureSelection.addAll(figureGroups.findGroup(figure));
 						}
 					}
-					if (figureSelection.size() == 1) { statusPane.updateStatus("Se seleccionó: %s".formatted(figureSelection.iterator().next())); }
-					else { statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size())); }
+					if (figureSelection.size() == 1) statusPane.updateStatus("Se seleccionó: %s".formatted(figureSelection.iterator().next()));
+					else statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));
 				}
 			}
-
+			//Si el rectángulo formado es muy pequeño, solo elige la figura de arriba
 			else {
 				Figure topFigure = canvasState.getTopFigureAt(endPoint);
+				//Si hay una figura...
 				if (topFigure != null) {
+					//Y pertenece a un grupo, selecciono a ese grupo
 					if(figureGroups.findGroup(topFigure) != null) {
 						figureSelection = figureGroups.findGroup(topFigure);
 					}
+					//En otro caso, agrego la figura de arriba a la selección
 					else {
 						figureSelection.add(topFigure);
 					}
@@ -235,37 +240,35 @@ public class PaintPane extends BorderPane {
 
 	private void getOnMouseClicked(MouseEvent mouseEvent) {
 		if(selectionButton.isSelected()) {
-			if(wasSelected) return;
+			if(selectionActive) return;
+
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
-			boolean found = false;
-			for (Figure figure : canvasState) {
-				if(figure.figureBelongs(eventPoint)) {
-					found = true;
-					wasSelected = true;
-					selectedFigure = figure;
+
+			//Recorro las figuras en el canvas, buscando si hay alguna en donde hice click
+			Figure foundFigure = canvasState.getTopFigureAt(eventPoint);
+
+			//Si encuentra una figura...
+			if(foundFigure != null) {
+				selectionActive = true;
+				//Si esa figura está en un grupo, hace que la selección sea ese grupo
+				if(figureGroups.findGroup(foundFigure) != null) {
+					figureSelection.addAll(figureGroups.findGroup(foundFigure));
+				}
+				//Sino, le pone a la figura los efectos propios
+				else {
+					effectsPane.shadeBox.setSelected(foundFigure.hasShadow());
+					effectsPane.gradientBox.setSelected(foundFigure.hasGradient());
+					effectsPane.bevelBox.setSelected(foundFigure.hasBevel());
 				}
 			}
-			if (found) {
-				if(figureGroups.findGroup(selectedFigure) != null) {
-					figureSelection.addAll(figureGroups.findGroup(selectedFigure));
-				}
-				else {
-					effectsPane.shadeBox.setSelected(selectedFigure.hasShadow());
-					effectsPane.gradientBox.setSelected(selectedFigure.hasGradient());
-					effectsPane.bevelBox.setSelected(selectedFigure.hasBevel());
-				}
-			} else {
-				selectedFigure = null;
+
+			//Si no encontró la figura, limpia la selección
+			else {
 				figureSelection.clear();
 			}
-			selectionButton.setSelected(false);
-		}
-		else {
-			figureSelection.clear();
-		}
-		redrawCanvas();
 
 
+		}
 	}
 
 	void redrawCanvas() {

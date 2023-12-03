@@ -14,9 +14,12 @@ public class FigureGroups extends HashSet<FigureSelection> {
         this.remove(figureSelection);
     }
 
+    //todo no guarda bien la selección; se supone que tiene que incluir todas
     public FigureSelection findGroup(Figure figure) {
         for(FigureSelection figureSelection : this) {
             if(figureSelection.contains(figure)) {
+                System.out.println("true");
+                System.out.println(this.size());
                 return figureSelection;
             }
         }
