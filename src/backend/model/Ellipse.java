@@ -46,8 +46,10 @@ public class Ellipse extends Figure {
     public boolean isContainedIn(Rectangle rectangle) {
         Point topLeft = rectangle.getTopLeft();
         Point bottomRight = rectangle.getBottomRight();
-        return topLeft.getX() <= centerPoint.getX() - sMayorAxis && topLeft.getY() >= centerPoint.getY() + sMinorAxis
-                && bottomRight.getX() >= centerPoint.getX() + sMayorAxis && bottomRight.getY() <= centerPoint.getY() - sMinorAxis;
+        return topLeft.getX() <= centerPoint.getX() - sMayorAxis/2 &&
+                topLeft.getY() <= centerPoint.getY() - sMinorAxis/2 &&
+                bottomRight.getX() >= centerPoint.getX() + sMayorAxis/2 &&
+                bottomRight.getY() >= centerPoint.getY() + sMinorAxis/2;
     }
 
     @Override
