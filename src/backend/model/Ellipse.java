@@ -36,6 +36,14 @@ public class Ellipse extends Figure {
         return sMinorAxis;
     }
 
+    private double getXRadius() {
+        return sMayorAxis / 2;
+    }
+
+    private double getYRadius() {
+        return sMinorAxis / 2;
+    }
+
     @Override
     public boolean figureBelongs(Point eventPoint) {
         return (((Math.pow(eventPoint.getX() - this.getCenterPoint().getX(), 2) / Math.pow(this.getsMayorAxis(), 2)) +
@@ -46,26 +54,25 @@ public class Ellipse extends Figure {
     public boolean isContainedIn(Rectangle rectangle) {
         Point topLeft = rectangle.getTopLeft();
         Point bottomRight = rectangle.getBottomRight();
-        return topLeft.getX() <= centerPoint.getX() - sMayorAxis/2 &&
-                topLeft.getY() <= centerPoint.getY() - sMinorAxis/2 &&
-                bottomRight.getX() >= centerPoint.getX() + sMayorAxis/2 &&
-                bottomRight.getY() >= centerPoint.getY() + sMinorAxis/2;
+        return topLeft.getX() <= centerPoint.getX() - getXRadius() &&
+                topLeft.getY() <= centerPoint.getY() - getYRadius() &&
+                bottomRight.getX() >= centerPoint.getX() + getXRadius() &&
+                bottomRight.getY() >= centerPoint.getY() + getYRadius();
     }
 
     @Override
     public void draw(GraphicsContext gc) {
         if(hasGradient()) {
-            RadialGradient radialGradient = new RadialGradient(0, 0, 0.5, 0.5, 0.5, true,
-                    CycleMethod.NO_CYCLE,
+            RadialGradient radialGradient = new RadialGradient(0, 0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE,
                     new Stop(0, getFillColor()),
                     new Stop(1, getFillColor().invert()));
             gc.setFill(radialGradient);
         }
-        else{
-            gc.setFill(this.getFillColor());
-        }
-        gc.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
-        gc.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
+
+        else gc.setFill(this.getFillColor());
+
+        gc.fillOval(getCenterPoint().getX() - getXRadius(), getCenterPoint().getY() - getYRadius(), getsMayorAxis(), getsMinorAxis());
+        gc.strokeOval(getCenterPoint().getX() - getXRadius(), getCenterPoint().getY() - getYRadius(), getsMayorAxis(), getsMinorAxis());
     }
 
     public static Ellipse createFrom(Point startPoint, Point endPoint) {
@@ -78,14 +85,14 @@ public class Ellipse extends Figure {
     @Override
     public void addShadow(GraphicsContext gc) {
         gc.setFill(Color.GRAY);
-        gc.fillOval(this.getCenterPoint().getX() - this.getsMayorAxis()/2 + 10.0,
-                this.getCenterPoint().getY() - this.getsMinorAxis()/2 + 10.0, this.sMayorAxis, this.sMinorAxis );
+        gc.fillOval(this.getCenterPoint().getX() - this.getXRadius() + 10.0,
+                this.getCenterPoint().getY() - this.getYRadius() + 10.0, this.sMayorAxis, this.sMinorAxis );
     }
 
     @Override
     public void addBevel(GraphicsContext gc) {
-        double arcX = this.getCenterPoint().getX() - this.getsMayorAxis()/2;
-        double arcY = this.getCenterPoint().getY() - this.getsMinorAxis()/2;
+        double arcX = this.getCenterPoint().getX() - this.getXRadius();
+        double arcY = this.getCenterPoint().getY() - this.getYRadius();
         gc.setLineWidth(10);
         gc.setStroke(Color.LIGHTGRAY);
         gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 45, 180, ArcType.OPEN);
