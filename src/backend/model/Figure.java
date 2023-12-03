@@ -11,7 +11,7 @@ public abstract class Figure implements Movable, Drawable, Effects {
     protected Figure(Point[] points) {
         this.points = points;
         shadow = false;
-        bevel = true;
+        bevel = false;
         gradient = false;
     }
 

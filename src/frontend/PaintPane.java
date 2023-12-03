@@ -7,13 +7,17 @@ import frontend.figureButtons.CircleButton;
 import frontend.figureButtons.EllipseButton;
 import frontend.figureButtons.RectangleButton;
 import frontend.figureButtons.SquareButton;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -56,15 +60,14 @@ public class PaintPane extends BorderPane {
 	StatusPane statusPane;
 
 	// EffectsBar
-	EffectsPane effectsPane;
+	EffectsPane effectsPane = new EffectsPane();
 
 	// Set para figuras seleccionadas
 	private final Set<Figure> figureSelection = new HashSet<>();
 
-	public PaintPane(CanvasState canvasState, StatusPane statusPane, EffectsPane effectsPane) {
+	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		this.effectsPane = effectsPane;
 
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
 
@@ -203,6 +206,78 @@ public class PaintPane extends BorderPane {
 
 	public Color getColorFromPicker(){
 		return fillColorPicker.getValue();
+	}
+
+
+
+	private class EffectsPane extends HBox {
+		final Label label = new Label("Efectos:\t");
+		final CheckBox shadeBox = new CheckBox("Sombra");
+		final CheckBox gradientBox = new CheckBox("Gradiente");
+		final CheckBox bevelBox = new CheckBox("Biselado");
+		final CheckBox[] effectsArr = {shadeBox, gradientBox, bevelBox};
+
+
+		public EffectsPane() {
+			for (CheckBox effect : effectsArr) {
+				effect.setMinWidth(90);
+				effect.setCursor(Cursor.HAND);
+			}
+			setAlignment(Pos.CENTER);
+			getChildren().add(label);
+			getChildren().addAll(effectsArr);
+			setPadding(new Insets(5));
+			setStyle("-fx-background-color: #999");
+			setPrefWidth(100);
+
+			shadeBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+				public void changed(ObservableValue<? extends Boolean> ov,
+									Boolean old_val, Boolean new_val) {
+					if(selectionButton.isSelected() && selectedFigure!=null){
+						if(new_val){
+							selectedFigure.modifyShadow(true);
+						}
+						if(!new_val){
+							selectedFigure.modifyShadow(false);
+						}
+					}
+					redrawCanvas();
+				}
+			});
+
+			bevelBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+				@Override
+				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+					if(selectionButton.isSelected() && selectedFigure!=null){
+						if(t1){
+							selectedFigure.modifyBevel(true);
+						}
+						if(!t1){
+							selectedFigure.modifyBevel(false);
+						}
+					}
+					redrawCanvas();
+				}
+			});
+
+			gradientBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+				@Override
+				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+					if(selectionButton.isSelected() && selectedFigure!=null){
+						if(t1){
+							selectedFigure.modifyGradient(true);
+						}
+						if(!t1){
+							selectedFigure.modifyGradient(false);
+						}
+					}
+					redrawCanvas();
+				}
+			});
+		}
+
+
+
 	}
 
 }
