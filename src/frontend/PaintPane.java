@@ -100,7 +100,13 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseDragged(this::onMouseDragged);
 		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
-		selectionButton.setOnAction(event -> { wasSelected = true; });
+		selectionButton.setOnAction(event -> {
+			if(wasSelected){
+				wasSelected = false;
+				figureSelection.clear();
+				redrawCanvas();
+			}
+			wasSelected = true; });
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
 			figureSelection.clear();
@@ -157,7 +163,6 @@ public class PaintPane extends BorderPane {
 
 		Toggle selectedButton = tools.getSelectedToggle();
 		if(selectedButton == null) return;
-
 		if(selectedButton == selectionButton) {
 			//figureSelection.clear();
 			if(startPoint.distanceTo(endPoint) > 1) {
@@ -170,13 +175,8 @@ public class PaintPane extends BorderPane {
 							figureSelection.addAll(figureGroups.findGroup(figure));
 						}
 				}
-				if (figureSelection.size() == 1) {
-					statusPane.updateStatus("Se seleccionó: %s".formatted(selectedFigure));
-				}
-				if(groupButton.isSelected()){
-					figureGroups.add(figureSelection);
-				}
-				statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));
+				if (figureSelection.size() == 1) {statusPane.updateStatus("Se seleccionó: %s".formatted(selectedFigure));}
+				else {statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));}
 				}
 
 			}
@@ -246,8 +246,13 @@ public class PaintPane extends BorderPane {
 				figureSelection.clear();
 			}
 			selectionButton.setSelected(false);
-			redrawCanvas();
 		}
+		else {
+			figureSelection.clear();
+		}
+		redrawCanvas();
+
+
 	}
 
 	void redrawCanvas() {
