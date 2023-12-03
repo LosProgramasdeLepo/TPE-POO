@@ -67,7 +67,7 @@ public class PaintPane extends BorderPane {
 	EffectsPane effectsPane = new EffectsPane();
 
 
-	private boolean wasSelected;
+	private boolean wasSelected = false;
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -100,13 +100,13 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseDragged(this::onMouseDragged);
 		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
-		selectionButton.setOnAction(event -> {
-			if(wasSelected){
-				wasSelected = false;
-				figureSelection.clear();
-				redrawCanvas();
-			}
-			wasSelected = true; });
+		//selectionButton.setOnAction(event -> {
+		//	if(wasSelected){
+		//		wasSelected = false;
+		//		figureSelection.clear();
+		//		redrawCanvas();
+		//	}
+		//	wasSelected = true; });
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
 			figureSelection.clear();
@@ -164,7 +164,7 @@ public class PaintPane extends BorderPane {
 		Toggle selectedButton = tools.getSelectedToggle();
 		if(selectedButton == null) return;
 		if(selectedButton == selectionButton) {
-			//figureSelection.clear();
+			figureSelection.clear();
 			if(startPoint.distanceTo(endPoint) > 1) {
 				Rectangle container = Rectangle.createFrom(startPoint, endPoint);
 				canvasState.figuresContainedIn(container, figureSelection);
@@ -224,11 +224,13 @@ public class PaintPane extends BorderPane {
 
 	private void getOnMouseClicked(MouseEvent mouseEvent) {
 		if(selectionButton.isSelected()) {
+			if(wasSelected){return;}
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 			boolean found = false;
 			for (Figure figure : canvasState) {
 				if(figure.figureBelongs(eventPoint)) {
 					found = true;
+					wasSelected = true;
 					selectedFigure = figure;
 				}
 			}
