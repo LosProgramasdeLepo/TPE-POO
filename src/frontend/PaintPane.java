@@ -42,6 +42,12 @@ public class PaintPane extends BorderPane {
 	final ToggleButton deleteButton = new ToggleButton("Borrar");
 	final ToggleButton groupButton = new ToggleButton("Agrupar");
 	final ToggleButton ungroupButton = new ToggleButton("Desagrupar");
+	final ToggleButton rotateRightButton = new ToggleButton("Girar D");
+	final ToggleButton flipHorizontallyButton = new ToggleButton("Voltear H");
+	final ToggleButton flipVerticallyButton = new ToggleButton("Voltear V");
+	final ToggleButton scaleUpButton = new ToggleButton("Escalar +");
+	final ToggleButton scaleDownButton = new ToggleButton("Escalar -");
+
 	final ToggleGroup tools = new ToggleGroup();
 
 	// Selector de color de relleno
@@ -68,7 +74,8 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, groupButton, ungroupButton};
+		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton,
+				groupButton, ungroupButton, rotateRightButton, flipHorizontallyButton, flipVerticallyButton, scaleUpButton, scaleDownButton};
 
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -125,6 +132,31 @@ public class PaintPane extends BorderPane {
 			figureGroups.ungroup(figureSelection);
 			resetSelection();
 			ungroupButton.setSelected(false);
+		});
+
+		rotateRightButton.setOnAction(event -> {
+
+			redrawCanvas();
+		});
+
+		flipHorizontallyButton.setOnAction(event -> {
+
+			redrawCanvas();
+		});
+
+		flipVerticallyButton.setOnAction(event -> {
+
+			redrawCanvas();
+		});
+
+		scaleUpButton.setOnAction(event -> {
+
+			redrawCanvas();
+		});
+
+		scaleDownButton.setOnAction(event -> {
+
+			redrawCanvas();
 		});
 
 		//Botón para crear un rectángulo
@@ -198,7 +230,7 @@ public class PaintPane extends BorderPane {
 
 		}
 
-		if(selectedButton != selectionButton && selectedButton != deleteButton && selectedButton != groupButton && selectedButton != ungroupButton) {
+		else {
 			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 		}
 
