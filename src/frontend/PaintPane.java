@@ -111,6 +111,7 @@ public class PaintPane extends BorderPane {
 			figureSelection.clear();
 			selectionActive = false;
 			redrawCanvas();
+			ungroupButton.setSelected(false);
 		});
 
 		groupButton.setOnAction(event -> {
@@ -119,6 +120,11 @@ public class PaintPane extends BorderPane {
 
 		ungroupButton.setOnAction(event -> { //todo esto no funciona
 			figureGroups.ungroup(figureSelection);
+			selectionActive = false;
+			selectionButton.setSelected(false);
+			figureSelection.clear();
+			redrawCanvas();
+			ungroupButton.setSelected(false);
 		});
 
 		rectangleButton.setOnAction(event -> { //todo todos estos eventos son iguales, deberían ser un método aparte..
@@ -191,7 +197,6 @@ public class PaintPane extends BorderPane {
 					else statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));
 				}
 			}
-			//Hago esto para pushear de vuelta
 			//Si el rectángulo formado es muy pequeño, solo elige la figura de arriba
 			else {
 				Figure topFigure = canvasState.getTopFigureAt(endPoint);
