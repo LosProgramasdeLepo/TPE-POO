@@ -139,27 +139,27 @@ public class PaintPane extends BorderPane {
 		});
 
 		rotateRightButton.setOnAction(event -> {
-
+			rotateRightButton.setSelected(false);
 			redrawCanvas();
 		});
 
 		flipHorizontallyButton.setOnAction(event -> {
-
+			flipHorizontallyButton.setSelected(false);
 			redrawCanvas();
 		});
 
 		flipVerticallyButton.setOnAction(event -> {
-
+			flipVerticallyButton.setSelected(false);
 			redrawCanvas();
 		});
 
 		scaleUpButton.setOnAction(event -> {
-
+			scaleUpButton.setSelected(false);
 			redrawCanvas();
 		});
 
 		scaleDownButton.setOnAction(event -> {
-
+			scaleDownButton.setSelected(false);
 			redrawCanvas();
 		});
 
