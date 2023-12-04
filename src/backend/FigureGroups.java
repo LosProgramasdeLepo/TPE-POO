@@ -31,7 +31,6 @@ public class FigureGroups extends HashSet<FigureSelection> {
     public FigureSelection findGroup(Figure figure) {
         for(FigureSelection figureSelection : this){
             if(figureSelection.contains(figure)) {
-                System.out.println("aaaaaaaaaaaaaaaa");
                 return figureSelection;
             }
         }
