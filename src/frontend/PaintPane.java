@@ -195,6 +195,7 @@ public class PaintPane extends BorderPane {
 					for (Figure figure : figureSelection) {
 						//Si la figura actual pertenece a un grupo, añado a la selección a todas las figuras de ese grupo
 						if (figureGroups.findGroup(figure) != null) {
+							System.out.println("#adasdasfsdvbagvasvdf");
 							figureSelection.addAll(figureGroups.findGroup(figure));
 						}
 					}
