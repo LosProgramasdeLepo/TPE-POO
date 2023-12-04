@@ -68,7 +68,10 @@ public class PaintPane extends BorderPane {
 	// EffectsBar
 	EffectsPane effectsPane = new EffectsPane();
 
-	private boolean selectionActive = false;
+	private boolean wasMoving;
+
+
+
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -100,9 +103,8 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseReleased(this::onMouseRelease);
 		canvas.setOnMouseMoved(this::onMouseMoved);
 		canvas.setOnMouseDragged(this::onMouseDragged);
-		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
-		//Botón para seleccionar
+		/* Botón para seleccionar
 		selectionButton.setOnAction(event -> {
 			if(selectionActive) {
 				//Si había una selección activa, la saco
@@ -113,6 +115,8 @@ public class PaintPane extends BorderPane {
 			//Si no, empiezo una
 			selectionActive = true;
 		});
+
+		 */
 
 		//Botón para borrar. Debe eliminar la selección actual.
 		deleteButton.setOnAction(event -> {
@@ -189,53 +193,50 @@ public class PaintPane extends BorderPane {
 		Toggle selectedButton = tools.getSelectedToggle();
 		if(selectedButton == null) return;
 
-		//Si activé el botón de selección...
-		if(selectedButton == selectionButton) {
-			//Debo sacar lo seleccionado
-			if(startPoint.distanceTo(endPoint) > 1) {
-				figureSelection.clear();
-				Rectangle container = Rectangle.createFrom(startPoint, endPoint);
-				//Modifica figureSelection directamente
-				canvasState.figuresContainedIn(container, figureSelection);
-				//Si la colección de figuras seleccionadas está vacía, no se encontró ninguna
-				if(figureSelection.isEmpty()) statusPane.updateStatus("Ninguna figura encontrada");
-				//En otro caso, hay una o más
-				else {
-					//Recorro las figuras seleccionadas
-					for (Figure figure : figureSelection) {
-						//Si la figura actual pertenece a un grupo, añado a la selección a todas las figuras de ese grupo
-						if (figureGroups.findGroup(figure) != null) {
-							figureSelection.addAll(figureGroups.findGroup(figure));
-						}
-					}
-					if (figureSelection.size() == 1) statusPane.updateStatus("Se seleccionó: %s".formatted(figureSelection.iterator().next()));
-					else statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));
+		if(selectedButton == selectionButton){
+			Rectangle container = Rectangle.createFrom(startPoint, endPoint);
+			Figure foundFigure = canvasState.getTopFigureAt(endPoint);
+			if(wasMoving){
+				if(foundFigure == null){
+					wasMoving = false;
+					figureSelection.clear();
+					redrawCanvas();
 				}
+				return;
 			}
-			//Si el rectángulo formado es muy pequeño, solo elige la figura de arriba
 			else {
-				Figure topFigure = canvasState.getTopFigureAt(endPoint);
-				//Si hay una figura...
-				if (topFigure != null) {
-					//Y pertenece a un grupo, selecciono a ese grupo
-					if(figureGroups.findGroup(topFigure) != null) {
-						figureSelection = figureGroups.findGroup(topFigure);
-					}
-					//En otro caso, agrego la figura de arriba a la selección
+				if(startPoint.distanceTo(endPoint) > 1) {
+					canvasState.figuresContainedIn(container, figureSelection);
+					//Si la colección de figuras seleccionadas está vacía, no se encontró ninguna //todo quizas esto podría ser una función aparte
+					if (figureSelection.isEmpty()) statusPane.updateStatus("Ninguna figura encontrada");
+						//En otro caso, hay una o más
 					else {
-						figureSelection.add(topFigure);
+						//Recorro las figuras seleccionadas
+						for (Figure figure : figureSelection) {
+							//Si la figura actual pertenece a un grupo, añado a la selección a todas las figuras de ese grupo
+							if (figureGroups.findGroup(figure) != null) {
+								figureSelection.addAll(figureGroups.findGroup(figure));
+							}
+						}
+						if (figureSelection.size() == 1)
+							statusPane.updateStatus("Se seleccionó: %s".formatted(figureSelection.iterator().next()));
+						else statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));
 					}
-					statusPane.updateStatus(String.format("Se seleccionó %s", topFigure));
+				}
+				else{
+					if(foundFigure!=null){
+						if(!figureSelection.isEmpty()){
+							figureSelection.clear();
+						}
+					figureSelection.add(foundFigure);
+					statusPane.updateStatus(String.format("Se seleccionó %s", foundFigure));
+					}
 				}
 			}
-
 		}
-
 		else {
 			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 		}
-
-        startPoint = null;
 		redrawCanvas();
 	}
 
@@ -257,9 +258,11 @@ public class PaintPane extends BorderPane {
 			}
 			startPoint.move(diffX, diffY);
 			redrawCanvas();
+			wasMoving = true;
 		}
 	}
 
+	/* INUTIL
 	private void getOnMouseClicked(MouseEvent mouseEvent) {
 		if(selectionButton.isSelected()) {
 			if(selectionActive) return;
@@ -290,6 +293,8 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
+	 */
+
 	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState) {
@@ -305,7 +310,6 @@ public class PaintPane extends BorderPane {
 	}
 
 	private void resetSelection() {
-		selectionActive = false;
 		selectionButton.setSelected(false);
 		figureSelection.clear();
 		redrawCanvas();
