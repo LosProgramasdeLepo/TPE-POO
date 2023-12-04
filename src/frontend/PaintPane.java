@@ -99,7 +99,7 @@ public class PaintPane extends BorderPane {
 		circleButton.setUserData(new CircleButton(this, canvasState));
 		ellipseButton.setUserData(new EllipseButton(this, canvasState));
 
-		//Funciones para acciones del mouse
+		//Métodos para acciones del mouse
 		canvas.setOnMousePressed(this::onMousePressed);
 		canvas.setOnMouseReleased(this::onMouseRelease);
 		canvas.setOnMouseMoved(this::onMouseMoved);
@@ -213,9 +213,7 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 			double diffX = (eventPoint.getX() - startPoint.getX());
 			double diffY = (eventPoint.getY() - startPoint.getY());
-			for (Figure figure : figureSelection) {
-				figure.move(diffX, diffY);
-			}
+			for (Figure figure : figureSelection) figure.move(diffX, diffY);
 			startPoint.move(diffX, diffY);
 			redrawCanvas();
 			wasMoving = true;
@@ -251,7 +249,7 @@ public class PaintPane extends BorderPane {
 		//Botón para borrar
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
-			resetSelection	();
+			resetSelection();
 			deleteButton.setSelected(false);
 		});
 
