@@ -42,6 +42,12 @@ public class PaintPane extends BorderPane {
 	final ToggleButton deleteButton = new ToggleButton("Borrar");
 	final ToggleButton groupButton = new ToggleButton("Agrupar");
 	final ToggleButton ungroupButton = new ToggleButton("Desagrupar");
+	final ToggleButton rotateRightButton = new ToggleButton("Girar D");
+	final ToggleButton flipHorizontallyButton = new ToggleButton("Voltear H");
+	final ToggleButton flipVerticallyButton = new ToggleButton("Voltear V");
+	final ToggleButton scaleUpButton = new ToggleButton("Escalar +");
+	final ToggleButton scaleDownButton = new ToggleButton("Escalar -");
+
 	final ToggleGroup tools = new ToggleGroup();
 
 	// Selector de color de relleno
@@ -68,7 +74,8 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, groupButton, ungroupButton};
+		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton,
+				groupButton, ungroupButton, rotateRightButton, flipHorizontallyButton, flipVerticallyButton, scaleUpButton, scaleDownButton};
 
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -95,6 +102,7 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseDragged(this::onMouseDragged);
 		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
+		//Botón para seleccionar
 		selectionButton.setOnAction(event -> {
 			if(selectionActive) {
 				//Si había una selección activa, la saco
@@ -106,30 +114,62 @@ public class PaintPane extends BorderPane {
 			selectionActive = true;
 		});
 
+		//Botón para borrar. Debe eliminar la selección actual.
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
-			resetSelecion();
+			resetSelection();
 			deleteButton.setSelected(false);
 		});
 
+		//Botón para agrupar. Debe eliminar la selección actual.
 		groupButton.setOnAction(event -> {
 			figureGroups.group(figureSelection);
 			groupButton.setSelected(false);
 		});
 
+		//Botón para desagrupar. Debe eliminar la selección actual.
 		ungroupButton.setOnAction(event -> { //todo esto no funciona
 			figureGroups.ungroup(figureSelection);
-			resetSelecion();
+			resetSelection();
 			ungroupButton.setSelected(false);
 		});
 
-		rectangleButton.setOnAction(event -> resetSelecion());
+		rotateRightButton.setOnAction(event -> {
 
-		squareButton.setOnAction(event -> resetSelecion());
+			redrawCanvas();
+		});
 
-		ellipseButton.setOnAction(event -> resetSelecion());
+		flipHorizontallyButton.setOnAction(event -> {
 
-		circleButton.setOnAction(event -> resetSelecion());
+			redrawCanvas();
+		});
+
+		flipVerticallyButton.setOnAction(event -> {
+
+			redrawCanvas();
+		});
+
+		scaleUpButton.setOnAction(event -> {
+
+			redrawCanvas();
+		});
+
+		scaleDownButton.setOnAction(event -> {
+
+			redrawCanvas();
+		});
+
+		//Botón para crear un rectángulo
+		rectangleButton.setOnAction(event -> resetSelection());
+
+		//Botón para crear un cuadrado
+		squareButton.setOnAction(event -> resetSelection());
+
+		//Botón para crear un elipse
+		ellipseButton.setOnAction(event -> resetSelection());
+
+		//Botón para crear un círculo
+		circleButton.setOnAction(event -> resetSelection());
 
 		setTop(effectsPane);
 		setLeft(buttonsBox);
@@ -152,8 +192,8 @@ public class PaintPane extends BorderPane {
 		//Si activé el botón de selección...
 		if(selectedButton == selectionButton) {
 			//Debo sacar lo seleccionado
-			figureSelection.clear();
 			if(startPoint.distanceTo(endPoint) > 1) {
+				figureSelection.clear();
 				Rectangle container = Rectangle.createFrom(startPoint, endPoint);
 				//Modifica figureSelection directamente
 				canvasState.figuresContainedIn(container, figureSelection);
@@ -165,7 +205,6 @@ public class PaintPane extends BorderPane {
 					for (Figure figure : figureSelection) {
 						//Si la figura actual pertenece a un grupo, añado a la selección a todas las figuras de ese grupo
 						if (figureGroups.findGroup(figure) != null) {
-							System.out.println("#adasdasfsdvbagvasvdf");
 							figureSelection.addAll(figureGroups.findGroup(figure));
 						}
 					}
@@ -192,7 +231,7 @@ public class PaintPane extends BorderPane {
 
 		}
 
-		if(selectedButton != selectionButton && selectedButton != deleteButton && selectedButton != groupButton && selectedButton != ungroupButton) {
+		else {
 			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 		}
 
@@ -224,7 +263,6 @@ public class PaintPane extends BorderPane {
 	private void getOnMouseClicked(MouseEvent mouseEvent) {
 		if(selectionButton.isSelected()) {
 			if(selectionActive) return;
-
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 
 			//Recorro las figuras en el canvas, buscando si hay alguna en donde hice click
@@ -249,26 +287,24 @@ public class PaintPane extends BorderPane {
 			else {
 				figureSelection.clear();
 			}
-
-
 		}
 	}
 
 	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState) {
-			gc.setStroke(figureSelection.contains(figure) ? DEFAULT_SELECTED_LINE_COLOR : DEFAULT_LINE_COLOR);
 			if(figure.hasShadow()){
 				figure.addShadow(gc);
 			}
 			if(figure.hasBevel()){
 				figure.addBevel(gc);
 			}
+			gc.setStroke(figureSelection.contains(figure) ? DEFAULT_SELECTED_LINE_COLOR : DEFAULT_LINE_COLOR);
 			figure.draw(gc);
 		}
 	}
 
-	private void resetSelecion() {
+	private void resetSelection() {
 		selectionActive = false;
 		selectionButton.setSelected(false);
 		figureSelection.clear();
@@ -304,36 +340,24 @@ public class PaintPane extends BorderPane {
 
 			shadeBox.selectedProperty().addListener((ov, old_val, new_val) -> {
                 if(!figureSelection.isEmpty()){
-                    if(new_val){
-                        figureSelection.modifyShadow(true);
-                    }
-                    if(!new_val){
-                        figureSelection.modifyShadow(false);
-                    }
+                    if(new_val) figureSelection.modifyShadow(true);
+                    if(!new_val) figureSelection.modifyShadow(false);
                 }
                 redrawCanvas();
             });
 
 			bevelBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
                 if(!figureSelection.isEmpty()){
-                    if(t1){
-                        figureSelection.modifyBevel(true);
-                    }
-                    if(!t1){
-                        figureSelection.modifyBevel(false);
-                    }
+                    if(t1) figureSelection.modifyBevel(true);
+                    if(!t1) figureSelection.modifyBevel(false);
                 }
                 redrawCanvas();
             });
 
 			gradientBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
                 if(!figureSelection.isEmpty()){
-                    if(t1){
-                        figureSelection.modifyGradient(true);
-                    }
-                    if(!t1){
-                        figureSelection.modifyGradient(false);
-                    }
+                    if(t1) figureSelection.modifyGradient(true);
+                    if(!t1) figureSelection.modifyGradient(false);
                 }
                 redrawCanvas();
             });
