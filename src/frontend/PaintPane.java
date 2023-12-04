@@ -191,6 +191,7 @@ public class PaintPane extends BorderPane {
 					else statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));
 				}
 			}
+			//Hago esto para pushear de vuelta
 			//Si el rectángulo formado es muy pequeño, solo elige la figura de arriba
 			else {
 				Figure topFigure = canvasState.getTopFigureAt(endPoint);
