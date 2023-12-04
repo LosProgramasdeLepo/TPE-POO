@@ -7,6 +7,11 @@ import java.util.HashSet;
 public class FigureGroups extends HashSet<FigureSelection> {
 
     public void group(FigureSelection figureSelection) {
+        for(Figure figure : figureSelection){
+            if(this.findGroup(figure)!=null){
+                return;
+            }
+        }
         this.add(figureSelection);
     }
 
@@ -16,11 +21,8 @@ public class FigureGroups extends HashSet<FigureSelection> {
 
     //todo no guarda bien la selección; se supone que tiene que incluir todas
     public FigureSelection findGroup(Figure figure) {
-        for(FigureSelection figureSelection : this) {
-            if(figureSelection.contains(figure)) {
-                System.out.println("true");
-                System.out.println(this);
-                System.out.println(this.size());
+        for(FigureSelection figureSelection : this){
+            if(figureSelection.contains(figure)){
                 return figureSelection;
             }
         }

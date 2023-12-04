@@ -128,6 +128,10 @@ public class PaintPane extends BorderPane {
 		//Botón para agrupar. Debe eliminar la selección actual.
 		groupButton.setOnAction(event -> {
 			figureGroups.group(figureSelection);
+			System.out.println(figureGroups.size());
+			for(FigureSelection figureSelection1 : figureGroups){
+				System.out.println(figureSelection1);
+			}
 			groupButton.setSelected(false);
 		});
 
@@ -226,10 +230,21 @@ public class PaintPane extends BorderPane {
 				else{
 					if(foundFigure!=null){
 						if(!figureSelection.isEmpty()){
+							System.out.println("hola");
 							figureSelection.clear();
+							redrawCanvas();
 						}
-					figureSelection.add(foundFigure);
-					statusPane.updateStatus(String.format("Se seleccionó %s", foundFigure));
+						System.out.println(figureGroups.findGroup(foundFigure));
+						if (figureGroups.findGroup(foundFigure) != null) {
+							figureSelection = figureGroups.findGroup(foundFigure);
+							System.out.println(figureGroups.findGroup(foundFigure));
+						} else {
+							figureSelection.add(foundFigure);
+						}
+						statusPane.updateStatus(String.format("Se seleccionó %s", foundFigure));
+					}
+					else{
+						figureSelection.clear();
 					}
 				}
 			}
