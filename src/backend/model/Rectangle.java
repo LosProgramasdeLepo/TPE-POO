@@ -26,14 +26,16 @@ public class Rectangle extends Figure {
         return bottomRight;
     }
 
-    private Point center() { return new Point(width()/2, height()/2); }
-
-    private double width() {
+    private double getWidth() {
         return bottomRight.getX() - topLeft.getX();
     }
 
-    private double height() {
+    private double getHeight() {
         return bottomRight.getY() - topLeft.getY();
+    }
+
+    private Point getCenter() {
+        return new Point(getWidth()/2, getHeight()/2);
     }
 
     @Override
@@ -67,8 +69,8 @@ public class Rectangle extends Figure {
         else {
             gc.setFill(getFillColor());
         }
-        gc.fillRect(getTopLeft().getX(), getTopLeft().getY(), width(), height());
-        gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), width(), height());
+        gc.fillRect(getTopLeft().getX(), getTopLeft().getY(), getWidth(), getHeight());
+        gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), getWidth(), getHeight());
 
     }
 

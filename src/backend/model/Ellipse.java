@@ -19,11 +19,6 @@ public class Ellipse extends Figure {
         this.sMinorAxis = sMinorAxis;
     }
 
-    @Override
-    public String toString() {
-        return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", centerPoint, sMayorAxis, sMinorAxis);
-    }
-
     public Point getCenterPoint() {
         return centerPoint;
     }
@@ -42,6 +37,11 @@ public class Ellipse extends Figure {
 
     private double getYRadius() {
         return sMinorAxis / 2;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", centerPoint, sMayorAxis, sMinorAxis);
     }
 
     @Override
@@ -68,9 +68,7 @@ public class Ellipse extends Figure {
                     new Stop(1, getFillColor().invert()));
             gc.setFill(radialGradient);
         }
-
         else gc.setFill(this.getFillColor());
-
         gc.fillOval(getCenterPoint().getX() - getXRadius(), getCenterPoint().getY() - getYRadius(), getsMayorAxis(), getsMinorAxis());
         gc.strokeOval(getCenterPoint().getX() - getXRadius(), getCenterPoint().getY() - getYRadius(), getsMayorAxis(), getsMinorAxis());
     }
@@ -125,4 +123,5 @@ public class Ellipse extends Figure {
     public void scaleDown() {
 
     }
+
 }
