@@ -23,5 +23,14 @@ public class FigureSelection extends HashSet<Figure> {
             figure.modifyBevel(status);
         }
     }
+    //todo MAL MAL SACARLO
+    public String toString(){
+        String result= "Resultado:" ;
+        for(Figure figure: this ){
+            result += figure.toString();
+        }
+        return result;
+    }
+
 
 }
