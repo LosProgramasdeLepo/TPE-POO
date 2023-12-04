@@ -19,6 +19,7 @@ public class FigureGroups extends HashSet<FigureSelection> {
         for(FigureSelection figureSelection : this) {
             if(figureSelection.contains(figure)) {
                 System.out.println("true");
+                System.out.println(this);
                 System.out.println(this.size());
                 return figureSelection;
             }
