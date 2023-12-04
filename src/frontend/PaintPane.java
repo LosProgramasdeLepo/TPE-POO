@@ -110,7 +110,7 @@ public class PaintPane extends BorderPane {
 		//Botón para borrar. Debe eliminar la selección actual.
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
-			resetSelecion();
+			resetSelection();
 			deleteButton.setSelected(false);
 		});
 
@@ -123,21 +123,21 @@ public class PaintPane extends BorderPane {
 		//Botón para desagrupar. Debe eliminar la selección actual.
 		ungroupButton.setOnAction(event -> { //todo esto no funciona
 			figureGroups.ungroup(figureSelection);
-			resetSelecion();
+			resetSelection();
 			ungroupButton.setSelected(false);
 		});
 
 		//Botón para crear un rectángulo
-		rectangleButton.setOnAction(event -> resetSelecion());
+		rectangleButton.setOnAction(event -> resetSelection());
 
 		//Botón para crear un cuadrado
-		squareButton.setOnAction(event -> resetSelecion());
+		squareButton.setOnAction(event -> resetSelection());
 
 		//Botón para crear un elipse
-		ellipseButton.setOnAction(event -> resetSelecion());
+		ellipseButton.setOnAction(event -> resetSelection());
 
 		//Botón para crear un círculo
-		circleButton.setOnAction(event -> resetSelecion());
+		circleButton.setOnAction(event -> resetSelection());
 
 		setTop(effectsPane);
 		setLeft(buttonsBox);
@@ -160,7 +160,6 @@ public class PaintPane extends BorderPane {
 		//Si activé el botón de selección...
 		if(selectedButton == selectionButton) {
 			//Debo sacar lo seleccionado
-			figureSelection.clear();
 			if(startPoint.distanceTo(endPoint) > 1) {
 				Rectangle container = Rectangle.createFrom(startPoint, endPoint);
 				//Modifica figureSelection directamente
@@ -173,7 +172,6 @@ public class PaintPane extends BorderPane {
 					for (Figure figure : figureSelection) {
 						//Si la figura actual pertenece a un grupo, añado a la selección a todas las figuras de ese grupo
 						if (figureGroups.findGroup(figure) != null) {
-							System.out.println("#adasdasfsdvbagvasvdf");
 							figureSelection.addAll(figureGroups.findGroup(figure));
 						}
 					}
@@ -232,7 +230,6 @@ public class PaintPane extends BorderPane {
 	private void getOnMouseClicked(MouseEvent mouseEvent) {
 		if(selectionButton.isSelected()) {
 			if(selectionActive) return;
-
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 
 			//Recorro las figuras en el canvas, buscando si hay alguna en donde hice click
@@ -276,7 +273,7 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	private void resetSelecion() {
+	private void resetSelection() {
 		selectionActive = false;
 		selectionButton.setSelected(false);
 		figureSelection.clear();
