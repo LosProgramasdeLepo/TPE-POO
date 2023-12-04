@@ -340,36 +340,24 @@ public class PaintPane extends BorderPane {
 
 			shadeBox.selectedProperty().addListener((ov, old_val, new_val) -> {
                 if(!figureSelection.isEmpty()){
-                    if(new_val){
-                        figureSelection.modifyShadow(true);
-                    }
-                    if(!new_val){
-                        figureSelection.modifyShadow(false);
-                    }
+                    if(new_val) figureSelection.modifyShadow(true);
+                    if(!new_val) figureSelection.modifyShadow(false);
                 }
                 redrawCanvas();
             });
 
 			bevelBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
                 if(!figureSelection.isEmpty()){
-                    if(t1){
-                        figureSelection.modifyBevel(true);
-                    }
-                    if(!t1){
-                        figureSelection.modifyBevel(false);
-                    }
+                    if(t1) figureSelection.modifyBevel(true);
+                    if(!t1) figureSelection.modifyBevel(false);
                 }
                 redrawCanvas();
             });
 
 			gradientBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
                 if(!figureSelection.isEmpty()){
-                    if(t1){
-                        figureSelection.modifyGradient(true);
-                    }
-                    if(!t1){
-                        figureSelection.modifyGradient(false);
-                    }
+                    if(t1) figureSelection.modifyGradient(true);
+                    if(!t1) figureSelection.modifyGradient(false);
                 }
                 redrawCanvas();
             });
