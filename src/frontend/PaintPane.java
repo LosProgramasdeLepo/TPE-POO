@@ -108,53 +108,28 @@ public class PaintPane extends BorderPane {
 
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
-			figureSelection.clear();
-			selectionActive = false;
-			redrawCanvas();
-			ungroupButton.setSelected(false);
+			resetSelecion();
+			deleteButton.setSelected(false);
 		});
 
 		groupButton.setOnAction(event -> {
 			figureGroups.group(figureSelection);
-			ungroupButton.setSelected(false);
+			groupButton.setSelected(false);
 		});
 
 		ungroupButton.setOnAction(event -> { //todo esto no funciona
 			figureGroups.ungroup(figureSelection);
-			selectionActive = false;
-			selectionButton.setSelected(false);
-			figureSelection.clear();
-			redrawCanvas();
+			resetSelecion();
 			ungroupButton.setSelected(false);
 		});
 
-		rectangleButton.setOnAction(event -> { //todo todos estos eventos son iguales, deberían ser un método aparte..
-			selectionActive = false;
-			selectionButton.setSelected(false);
-			figureSelection.clear();
-			redrawCanvas();
-		});
+		rectangleButton.setOnAction(event -> resetSelecion());
 
-		squareButton.setOnAction(event -> {
-			selectionActive = false;
-			selectionButton.setSelected(false);
-			figureSelection.clear();
-			redrawCanvas();
-		});
+		squareButton.setOnAction(event -> resetSelecion());
 
-		ellipseButton.setOnAction(event -> {
-			selectionActive = false;
-			selectionButton.setSelected(false);
-			figureSelection.clear();
-			redrawCanvas();
-		});
+		ellipseButton.setOnAction(event -> resetSelecion());
 
-		circleButton.setOnAction(event -> {
-			selectionActive = false;
-			selectionButton.setSelected(false);
-			figureSelection.clear();
-			redrawCanvas();
-		});
+		circleButton.setOnAction(event -> resetSelecion());
 
 		setTop(effectsPane);
 		setLeft(buttonsBox);
@@ -279,7 +254,7 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	void redrawCanvas() {
+	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState) {
 			gc.setStroke(figureSelection.contains(figure) ? DEFAULT_SELECTED_LINE_COLOR : DEFAULT_LINE_COLOR);
@@ -291,6 +266,13 @@ public class PaintPane extends BorderPane {
 			}
 			figure.draw(gc);
 		}
+	}
+
+	private void resetSelecion() {
+		selectionActive = false;
+		selectionButton.setSelected(false);
+		figureSelection.clear();
+		redrawCanvas();
 	}
 
 	public StatusPane getStatusPane(){
