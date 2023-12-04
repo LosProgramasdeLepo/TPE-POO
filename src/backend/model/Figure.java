@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import static java.util.Objects.hash;
 
@@ -75,7 +76,12 @@ public abstract class Figure implements Movable, Drawable, Effects, Transformabl
 
    @Override
     public int hashCode(){
-      return hash(Arrays.hashCode(this.points), this.bevel, this.shadow, this.gradient, this.fillColor);
+      return Objects.hash(Arrays.hashCode(this.points), this.bevel, this.shadow, this.gradient, this.fillColor);
+    }
+
+    @Override
+    public boolean equals(Object o){
+        return (this == o);
     }
 
 }

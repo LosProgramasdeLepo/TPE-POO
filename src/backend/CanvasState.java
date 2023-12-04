@@ -23,4 +23,13 @@ public class CanvasState extends ArrayList<Figure> {
         }
     }
 
+    public Figure getFigure(Figure figure){
+        for(Figure existing : this){
+            if(existing.equals(figure)){
+                return figure;
+            }
+        }
+        return null;
+    }
+
 }

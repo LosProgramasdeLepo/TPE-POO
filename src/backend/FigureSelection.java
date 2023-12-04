@@ -3,6 +3,7 @@ package backend;
 import backend.model.Figure;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 public class FigureSelection extends HashSet<Figure> {
 
@@ -23,35 +24,30 @@ public class FigureSelection extends HashSet<Figure> {
             figure.modifyBevel(status);
         }
     }
-
-    public void rotateRight() {
-        for (Figure figure : this) {
-            figure.rotateRight();
+    //todo MAL MAL SACARLO es para tests solamente
+    public String toString(){
+        String result= "Resultado:" ;
+        for(Figure figure: this ){
+            result += figure.toString();
         }
+        return result;
     }
 
-    public void flipHorizontally() {
-        for (Figure figure : this) {
-            figure.flipHorizontally();
-        }
-    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
-    public void flipVertically() {
-        for (Figure figure : this) {
-            figure.flipVertically();
-        }
+        FigureSelection otherSelection = (FigureSelection) obj;
+        return this.containsAll(otherSelection) && otherSelection.containsAll(this);
     }
-
-    public void scaleUp() {
-        for (Figure figure : this) {
-            figure.scaleUp();
+    @Override
+    public int hashCode(){
+        int hashCode = 1;
+        for(Figure figure : this){
+            hashCode = 31 * hashCode + Objects.hashCode(figure);
         }
-    }
-
-    public void scaleDown() {
-        for (Figure figure : this) {
-            figure.scaleDown();
-        }
+        return hashCode;
     }
 
 }
