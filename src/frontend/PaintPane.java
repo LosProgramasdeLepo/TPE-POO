@@ -95,6 +95,7 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseDragged(this::onMouseDragged);
 		canvas.setOnMouseClicked(this::getOnMouseClicked);
 
+		//Botón para seleccionar
 		selectionButton.setOnAction(event -> {
 			if(selectionActive) {
 				//Si había una selección activa, la saco
@@ -106,29 +107,36 @@ public class PaintPane extends BorderPane {
 			selectionActive = true;
 		});
 
+		//Botón para borrar. Debe eliminar la selección actual.
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
 			resetSelecion();
 			deleteButton.setSelected(false);
 		});
 
+		//Botón para agrupar. Debe eliminar la selección actual.
 		groupButton.setOnAction(event -> {
 			figureGroups.group(figureSelection);
 			groupButton.setSelected(false);
 		});
 
+		//Botón para desagrupar. Debe eliminar la selección actual.
 		ungroupButton.setOnAction(event -> { //todo esto no funciona
 			figureGroups.ungroup(figureSelection);
 			resetSelecion();
 			ungroupButton.setSelected(false);
 		});
 
+		//Botón para crear un rectángulo
 		rectangleButton.setOnAction(event -> resetSelecion());
 
+		//Botón para crear un cuadrado
 		squareButton.setOnAction(event -> resetSelecion());
 
+		//Botón para crear un elipse
 		ellipseButton.setOnAction(event -> resetSelecion());
 
+		//Botón para crear un círculo
 		circleButton.setOnAction(event -> resetSelecion());
 
 		setTop(effectsPane);
