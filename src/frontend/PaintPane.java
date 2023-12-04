@@ -21,19 +21,19 @@ import javafx.scene.paint.Color;
 
 public class PaintPane extends BorderPane {
 
-	// BackEnd
+	//BackEnd
 	CanvasState canvasState;
 
-	// Canvas y relacionados
+	//Canvas y relacionados
 	Canvas canvas = new Canvas(800, 600);
 	GraphicsContext gc = canvas.getGraphicsContext2D();
 
-	// Constantes de colores
+	//Constantes de colores
 	Color DEFAULT_LINE_COLOR = Color.BLACK;
 	Color DEFAULT_FILL_COLOR = Color.YELLOW;
 	Color DEFAULT_SELECTED_LINE_COLOR = Color.RED;
 
-	// Botones Barra Izquierda
+	//Botones Barra Izquierda
 	final ToggleButton selectionButton = new ToggleButton("Seleccionar");
 	final ToggleButton rectangleButton = new ToggleButton("Rectángulo");
 	final ToggleButton circleButton = new ToggleButton("Círculo");
@@ -50,28 +50,26 @@ public class PaintPane extends BorderPane {
 
 	final ToggleGroup tools = new ToggleGroup();
 
-	// Selector de color de relleno
+	//Selector de color de relleno
 	ColorPicker fillColorPicker = new ColorPicker(DEFAULT_FILL_COLOR);
 
-	// Dibujar una figura
+	//Dibujar una figura
 	Point startPoint;
 
-	// Set para figuras seleccionadas
+	//Set para figuras seleccionadas
 	FigureSelection figureSelection = new FigureSelection();
 
-	// Grupos de figuras agrupadas
+	//Grupos de figuras agrupadas
 	FigureGroups figureGroups = new FigureGroups();
 
-	// StatusBar
+	//StatusBar
 	StatusPane statusPane;
 
-	// EffectsBar
+	//EffectsBar
 	EffectsPane effectsPane = new EffectsPane();
 
+	//Verdadero si se estaban moviendo figuras
 	private boolean wasMoving;
-
-
-
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -86,104 +84,37 @@ public class PaintPane extends BorderPane {
 			tool.setCursor(Cursor.HAND);
 		}
 
-		VBox buttonsBox = new VBox(10);
-		buttonsBox.getChildren().addAll(toolsArr);
-		buttonsBox.getChildren().add(fillColorPicker);
-		buttonsBox.setPadding(new Insets(5));
-		buttonsBox.setStyle("-fx-background-color: #999");
-		buttonsBox.setPrefWidth(100);
+		//Crea la barra de herramientas
+		VBox toolsBox = new VBox(10);
+		toolsBox.getChildren().addAll(toolsArr);
+		toolsBox.getChildren().add(fillColorPicker);
+		toolsBox.setPadding(new Insets(5));
+		toolsBox.setStyle("-fx-background-color: #999");
+		toolsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
+		//Crea las figuras adecuadas al tocar sus respectivos botones
 		rectangleButton.setUserData(new RectangleButton(this, canvasState));
 		squareButton.setUserData(new SquareButton(this,canvasState));
 		circleButton.setUserData(new CircleButton(this, canvasState));
 		ellipseButton.setUserData(new EllipseButton(this, canvasState));
 
+		//Funciones para acciones del mouse
 		canvas.setOnMousePressed(this::onMousePressed);
 		canvas.setOnMouseReleased(this::onMouseRelease);
 		canvas.setOnMouseMoved(this::onMouseMoved);
 		canvas.setOnMouseDragged(this::onMouseDragged);
 
-		/* Botón para seleccionar
-		selectionButton.setOnAction(event -> {
-			if(selectionActive) {
-				//Si había una selección activa, la saco
-				selectionActive = false;
-				figureSelection.clear();
-				redrawCanvas();
-			}
-			//Si no, empiezo una
-			selectionActive = true;
-		});
+		//Método que define las acciones de los botones
+		setButtons();
 
-		 */
-
-		//Botón para borrar. Debe eliminar la selección actual.
-		deleteButton.setOnAction(event -> {
-			canvasState.removeAll(figureSelection);
-			resetSelection();
-			deleteButton.setSelected(false);
-		});
-
-		//Botón para agrupar. Debe eliminar la selección actual.
-		groupButton.setOnAction(event -> {
-			figureGroups.group(figureSelection);
-			System.out.println(figureGroups.size());
-			for(FigureSelection figureSelection1 : figureGroups){
-				System.out.println(figureSelection1);
-			}
-			groupButton.setSelected(false);
-		});
-
-		//Botón para desagrupar. Debe eliminar la selección actual.
-		ungroupButton.setOnAction(event -> { //todo esto no funciona
-			figureGroups.ungroup(figureSelection);
-			resetSelection();
-			ungroupButton.setSelected(false);
-		});
-
-		rotateRightButton.setOnAction(event -> {
-			rotateRightButton.setSelected(false);
-			redrawCanvas();
-		});
-
-		flipHorizontallyButton.setOnAction(event -> {
-			flipHorizontallyButton.setSelected(false);
-			redrawCanvas();
-		});
-
-		flipVerticallyButton.setOnAction(event -> {
-			flipVerticallyButton.setSelected(false);
-			redrawCanvas();
-		});
-
-		scaleUpButton.setOnAction(event -> {
-			scaleUpButton.setSelected(false);
-			redrawCanvas();
-		});
-
-		scaleDownButton.setOnAction(event -> {
-			scaleDownButton.setSelected(false);
-			redrawCanvas();
-		});
-
-		//Botón para crear un rectángulo
-		rectangleButton.setOnAction(event -> resetSelection());
-
-		//Botón para crear un cuadrado
-		squareButton.setOnAction(event -> resetSelection());
-
-		//Botón para crear un elipse
-		ellipseButton.setOnAction(event -> resetSelection());
-
-		//Botón para crear un círculo
-		circleButton.setOnAction(event -> resetSelection());
-
+		//Posiciono el canvas, la barra de efectos y las herramientas
 		setTop(effectsPane);
-		setLeft(buttonsBox);
+		setLeft(toolsBox);
 		setRight(canvas);
 	}
 
+	//Cuando se presiona el mouse, se crea un punto
 	private void onMousePressed(MouseEvent mouseEvent) {
 		startPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 	}
@@ -197,61 +128,74 @@ public class PaintPane extends BorderPane {
 		Toggle selectedButton = tools.getSelectedToggle();
 		if(selectedButton == null) return;
 
-		if(selectedButton == selectionButton){
-			Rectangle container = Rectangle.createFrom(startPoint, endPoint);
+		//Caso: El botón de selección está marcado
+		if(selectedButton == selectionButton) {
 			Figure foundFigure = canvasState.getTopFigureAt(endPoint);
-			if(wasMoving){
-				if(foundFigure == null){
+
+			//Caso: Se estaban moviendo figuras (por lo que al liberar el click fuera de una figura se sale de la selección)
+			if(wasMoving) {
+				if(foundFigure == null) {
 					wasMoving = false;
 					figureSelection.clear();
 					redrawCanvas();
 				}
 				return;
 			}
+
+			//Caso: No se estaban moviendo figuras
 			else {
+				//Caso: Se dibuja un rectángulo contenedor
 				if(startPoint.distanceTo(endPoint) > 1) {
+					Rectangle container = Rectangle.createFrom(startPoint, endPoint);
 					canvasState.figuresContainedIn(container, figureSelection);
-					//Si la colección de figuras seleccionadas está vacía, no se encontró ninguna //todo quizas esto podría ser una función aparte
-					if (figureSelection.isEmpty()) statusPane.updateStatus("Ninguna figura encontrada");
-						//En otro caso, hay una o más
+
+					//Caso: No hay figuras
+					if (figureSelection.isEmpty()) statusPane.updateStatusGivenSelection(figureSelection);
+
+					//Caso: Hay una o más
 					else {
-						//Recorro las figuras seleccionadas
 						for (Figure figure : figureSelection) {
-							//Si la figura actual pertenece a un grupo, añado a la selección a todas las figuras de ese grupo
-							if (figureGroups.findGroup(figure) != null) {
+							//Caso: Una figura pertenece a un grupo (agrego todas las de dicho grupo)
+							if (figureGroups.findGroup(figure) != null) {					//todo esto podría ser una función
 								figureSelection.addAll(figureGroups.findGroup(figure));
 							}
 						}
-						if (figureSelection.size() == 1)
-							statusPane.updateStatus("Se seleccionó: %s".formatted(figureSelection.iterator().next()));
-						else statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));
+						statusPane.updateStatusGivenSelection(figureSelection);
 					}
 				}
-				else{
-					if(foundFigure!=null){
-						if(!figureSelection.isEmpty()){
-							System.out.println("hola");
+
+				//Caso: Se hace click
+				else {
+					//Caso: No hay ninguna figura
+					if(foundFigure != null) {
+						if(!figureSelection.isEmpty()) {
 							figureSelection.clear();
 							redrawCanvas();
 						}
+
 						System.out.println(figureGroups.findGroup(foundFigure));
-						if (figureGroups.findGroup(foundFigure) != null) {
+
+						//Caso: La figura pertenece a un grupo
+						if (figureGroups.findGroup(foundFigure) != null) {				//todo esto podría ser una función (se repite acá)
 							figureSelection = figureGroups.findGroup(foundFigure);
 							System.out.println(figureGroups.findGroup(foundFigure));
-						} else {
-							figureSelection.add(foundFigure);
 						}
-						statusPane.updateStatus(String.format("Se seleccionó %s", foundFigure));
+
+						//Caso: La figura no pertenece a un grupo
+						else figureSelection.add(foundFigure);
+
+						statusPane.updateStatusGivenSelection(figureSelection);
 					}
-					else{
-						figureSelection.clear();
-					}
+
+					//Caso: No hay ninguna figura
+					else figureSelection.clear();
 				}
 			}
 		}
-		else {
-			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
-		}
+
+		//Caso: El botón de selección no está marcado (se crea una figura)
+		else ((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
+
 		redrawCanvas();
 	}
 
@@ -259,6 +203,7 @@ public class PaintPane extends BorderPane {
 		if(figureSelection.isEmpty()) {
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 			Figure topFigure = canvasState.getTopFigureAt(eventPoint);
+			//Si hay una figura, muestra su información (y si no las coordenadas)
 			statusPane.updateStatus(topFigure == null ? eventPoint.toString() : topFigure.toString());
 		}
 	}
@@ -277,48 +222,12 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	/* INUTIL
-	private void getOnMouseClicked(MouseEvent mouseEvent) {
-		if(selectionButton.isSelected()) {
-			if(selectionActive) return;
-			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
-
-			//Recorro las figuras en el canvas, buscando si hay alguna en donde hice click
-			Figure foundFigure = canvasState.getTopFigureAt(eventPoint);
-
-			//Si encuentra una figura...
-			if(foundFigure != null) {
-				selectionActive = true;
-				//Si esa figura está en un grupo, hace que la selección sea ese grupo
-				if(figureGroups.findGroup(foundFigure) != null) {
-					figureSelection.addAll(figureGroups.findGroup(foundFigure));
-				}
-				//Sino, le pone a la figura los efectos propios
-				else {
-					effectsPane.shadeBox.setSelected(foundFigure.hasShadow());
-					effectsPane.gradientBox.setSelected(foundFigure.hasGradient());
-					effectsPane.bevelBox.setSelected(foundFigure.hasBevel());
-				}
-			}
-
-			//Si no encontró la figura, limpia la selección
-			else {
-				figureSelection.clear();
-			}
-		}
-	}
-
-	 */
-
 	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState) {
-			if(figure.hasShadow()){
-				figure.addShadow(gc);
-			}
-			if(figure.hasBevel()){
-				figure.addBevel(gc);
-			}
+			if(figure.hasShadow()) figure.addShadow(gc);
+			if(figure.hasBevel()) figure.addBevel(gc);
+			//Si la figura estaba seleccionada, le pone el borde rojo (y si no le pone el borde negro)
 			gc.setStroke(figureSelection.contains(figure) ? DEFAULT_SELECTED_LINE_COLOR : DEFAULT_LINE_COLOR);
 			figure.draw(gc);
 		}
@@ -338,6 +247,75 @@ public class PaintPane extends BorderPane {
 		return fillColorPicker.getValue();
 	}
 
+	private void setButtons() {
+		//Botón para borrar
+		deleteButton.setOnAction(event -> {
+			canvasState.removeAll(figureSelection);
+			resetSelection	();
+			deleteButton.setSelected(false);
+		});
+
+		//Botón para agrupar
+		groupButton.setOnAction(event -> {
+			figureGroups.group(figureSelection);
+			System.out.println(figureGroups.size());
+			for(FigureSelection figureSelection1 : figureGroups){
+				System.out.println(figureSelection1);
+			}
+			groupButton.setSelected(false);
+		});
+
+		//Botón para desagrupar
+		ungroupButton.setOnAction(event -> {
+			figureGroups.ungroup(figureSelection);
+			resetSelection();
+			ungroupButton.setSelected(false);
+		});
+
+		//Botón para rotar a la derecha
+		rotateRightButton.setOnAction(event -> {
+			rotateRightButton.setSelected(false);
+			redrawCanvas();
+		});
+
+		//Botón para rotar horizontalmente
+		flipHorizontallyButton.setOnAction(event -> {
+			flipHorizontallyButton.setSelected(false);
+			redrawCanvas();
+		});
+
+		//Botón para rotar verticalmente
+		flipVerticallyButton.setOnAction(event -> {
+			flipVerticallyButton.setSelected(false);
+			redrawCanvas();
+		});
+
+		//Botón para aumentar el tamaño de la figura
+		scaleUpButton.setOnAction(event -> {
+			scaleUpButton.setSelected(false);
+			redrawCanvas();
+		});
+
+		//Botón para disminuir el tamaño de la figura
+		scaleDownButton.setOnAction(event -> {
+			scaleDownButton.setSelected(false);
+			redrawCanvas();
+		});
+
+		//Botón para crear un rectángulo
+		rectangleButton.setOnAction(event -> resetSelection());
+
+		//Botón para crear un cuadrado
+		squareButton.setOnAction(event -> resetSelection());
+
+		//Botón para crear un elipse
+		ellipseButton.setOnAction(event -> resetSelection());
+
+		//Botón para crear un círculo
+		circleButton.setOnAction(event -> resetSelection());
+	}
+
+	//Clase que compone al panel de efectos superior
 	private class EffectsPane extends HBox {
 		final Label label = new Label("Efectos:\t");
 		final CheckBox shadeBox = new CheckBox("Sombra");
@@ -350,6 +328,7 @@ public class PaintPane extends BorderPane {
 				effect.setMinWidth(90);
 				effect.setCursor(Cursor.HAND);
 			}
+
 			setAlignment(Pos.CENTER);
 			getChildren().add(label);
 			getChildren().addAll(effectsArr);

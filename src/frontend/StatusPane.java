@@ -1,5 +1,6 @@
 package frontend;
 
+import backend.FigureSelection;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -18,6 +19,13 @@ public class StatusPane extends BorderPane {
 	
 	public void updateStatus(String text) {
 		statusLabel.setText(text);
+	}
+
+	public void updateStatusGivenSelection(FigureSelection figureSelection) {
+		int size = figureSelection.size();
+		if(size == 0) updateStatus("Ninguna figura encontrada");
+		if(size == 1) updateStatus(String.format("Se seleccionó: %s", figureSelection.iterator().next()));
+		else updateStatus(String.format("Se seleccionaron %d figuras", size));
 	}
 
 }
