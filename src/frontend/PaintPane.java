@@ -193,6 +193,7 @@ public class PaintPane extends BorderPane {
 		if(selectedButton == selectionButton) {
 			//Debo sacar lo seleccionado
 			if(startPoint.distanceTo(endPoint) > 1) {
+				figureSelection.clear();
 				Rectangle container = Rectangle.createFrom(startPoint, endPoint);
 				//Modifica figureSelection directamente
 				canvasState.figuresContainedIn(container, figureSelection);
@@ -286,21 +287,19 @@ public class PaintPane extends BorderPane {
 			else {
 				figureSelection.clear();
 			}
-
-
 		}
 	}
 
 	private void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState) {
-			gc.setStroke(figureSelection.contains(figure) ? DEFAULT_SELECTED_LINE_COLOR : DEFAULT_LINE_COLOR);
 			if(figure.hasShadow()){
 				figure.addShadow(gc);
 			}
 			if(figure.hasBevel()){
 				figure.addBevel(gc);
 			}
+			gc.setStroke(figureSelection.contains(figure) ? DEFAULT_SELECTED_LINE_COLOR : DEFAULT_LINE_COLOR);
 			figure.draw(gc);
 		}
 	}
