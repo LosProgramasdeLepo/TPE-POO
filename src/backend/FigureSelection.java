@@ -23,14 +23,35 @@ public class FigureSelection extends HashSet<Figure> {
             figure.modifyBevel(status);
         }
     }
-    //todo MAL MAL SACARLO
-    public String toString(){
-        String result= "Resultado:" ;
-        for(Figure figure: this ){
-            result += figure.toString();
+
+    public void rotateRight() {
+        for (Figure figure : this) {
+            figure.rotateRight();
         }
-        return result;
     }
 
+    public void flipHorizontally() {
+        for (Figure figure : this) {
+            figure.flipHorizontally();
+        }
+    }
+
+    public void flipVertically() {
+        for (Figure figure : this) {
+            figure.flipVertically();
+        }
+    }
+
+    public void scaleUp() {
+        for (Figure figure : this) {
+            figure.scaleUp();
+        }
+    }
+
+    public void scaleDown() {
+        for (Figure figure : this) {
+            figure.scaleDown();
+        }
+    }
 
 }

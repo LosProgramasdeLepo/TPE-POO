@@ -156,6 +156,7 @@ public class PaintPane extends BorderPane {
 					else {
 						for (Figure figure : figureSelection) {
 							//Caso: Una figura pertenece a un grupo (agrego todas las de dicho grupo)
+							System.out.println(figureSelection.size());
 							if (figureGroups.findGroup(figure) != null) {					//todo esto podría ser una función
 								figureSelection.addAll(figureGroups.findGroup(figure));
 							}
@@ -166,19 +167,16 @@ public class PaintPane extends BorderPane {
 
 				//Caso: Se hace click
 				else {
-					//Caso: No hay ninguna figura
+					//Caso: Hay una figura
 					if(foundFigure != null) {
 						if(!figureSelection.isEmpty()) {
 							figureSelection.clear();
 							redrawCanvas();
 						}
 
-						System.out.println(figureGroups.findGroup(foundFigure));
-
 						//Caso: La figura pertenece a un grupo
 						if (figureGroups.findGroup(foundFigure) != null) {				//todo esto podría ser una función (se repite acá)
 							figureSelection = figureGroups.findGroup(foundFigure);
-							System.out.println(figureGroups.findGroup(foundFigure));
 						}
 
 						//Caso: La figura no pertenece a un grupo
@@ -257,9 +255,6 @@ public class PaintPane extends BorderPane {
 		groupButton.setOnAction(event -> {
 			figureGroups.group(figureSelection);
 			System.out.println(figureGroups.size());
-			for(FigureSelection figureSelection1 : figureGroups){
-				System.out.println(figureSelection1);
-			}
 			groupButton.setSelected(false);
 		});
 
@@ -273,30 +268,35 @@ public class PaintPane extends BorderPane {
 		//Botón para rotar a la derecha
 		rotateRightButton.setOnAction(event -> {
 			rotateRightButton.setSelected(false);
+			figureSelection.rotateRight();
 			redrawCanvas();
 		});
 
 		//Botón para rotar horizontalmente
 		flipHorizontallyButton.setOnAction(event -> {
 			flipHorizontallyButton.setSelected(false);
+			figureSelection.flipHorizontally();
 			redrawCanvas();
 		});
 
 		//Botón para rotar verticalmente
 		flipVerticallyButton.setOnAction(event -> {
 			flipVerticallyButton.setSelected(false);
+			figureSelection.flipVertically();
 			redrawCanvas();
 		});
 
 		//Botón para aumentar el tamaño de la figura
 		scaleUpButton.setOnAction(event -> {
 			scaleUpButton.setSelected(false);
+			figureSelection.scaleUp();
 			redrawCanvas();
 		});
 
 		//Botón para disminuir el tamaño de la figura
 		scaleDownButton.setOnAction(event -> {
 			scaleDownButton.setSelected(false);
+			figureSelection.scaleDown();
 			redrawCanvas();
 		});
 

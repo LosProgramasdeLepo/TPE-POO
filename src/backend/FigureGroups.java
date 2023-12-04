@@ -8,7 +8,7 @@ public class FigureGroups extends HashSet<FigureSelection> {
 
     public void group(FigureSelection figureSelection) {
         for(Figure figure : figureSelection){
-            if(this.findGroup(figure)!=null){
+            if(this.findGroup(figure) != null) {
                 return;
             }
         }
@@ -22,7 +22,8 @@ public class FigureGroups extends HashSet<FigureSelection> {
     //todo no guarda bien la selección; se supone que tiene que incluir todas
     public FigureSelection findGroup(Figure figure) {
         for(FigureSelection figureSelection : this){
-            if(figureSelection.contains(figure)){
+            if(figureSelection.contains(figure)) {
+                System.out.println("aaaaaaaaaaaaaaaa");
                 return figureSelection;
             }
         }
