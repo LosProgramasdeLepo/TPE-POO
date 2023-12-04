@@ -159,11 +159,13 @@ public class PaintPane extends BorderPane {
 							if (figureGroups.findGroup(figure) != null) {					//todo esto podría ser una función
 								figureSelection.addAll(figureGroups.findGroup(figure));
 							}
+							else{
+								figureSelection.add(figure);
+							}
 						}
 						statusPane.updateStatusGivenSelection(figureSelection);
 					}
 				}
-
 				//Caso: Se hace click
 				else {
 					//Caso: No hay ninguna figura
@@ -173,12 +175,10 @@ public class PaintPane extends BorderPane {
 							redrawCanvas();
 						}
 
-						System.out.println(figureGroups.findGroup(foundFigure));
 
 						//Caso: La figura pertenece a un grupo
 						if (figureGroups.findGroup(foundFigure) != null) {				//todo esto podría ser una función (se repite acá)
-							figureSelection = figureGroups.findGroup(foundFigure);
-							System.out.println(figureGroups.findGroup(foundFigure));
+							figureSelection.addAll(figureGroups.findGroup(foundFigure));
 						}
 
 						//Caso: La figura no pertenece a un grupo
@@ -186,13 +186,11 @@ public class PaintPane extends BorderPane {
 
 						statusPane.updateStatusGivenSelection(figureSelection);
 					}
-
 					//Caso: No hay ninguna figura
 					else figureSelection.clear();
 				}
 			}
 		}
-
 		//Caso: El botón de selección no está marcado (se crea una figura)
 		else ((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 
@@ -255,19 +253,18 @@ public class PaintPane extends BorderPane {
 
 		//Botón para agrupar
 		groupButton.setOnAction(event -> {
-			figureGroups.group(figureSelection);
-			System.out.println(figureGroups.size());
-			for(FigureSelection figureSelection1 : figureGroups){
-				System.out.println(figureSelection1);
-			}
+			figureGroups.group(figureSelection, canvasState);
 			groupButton.setSelected(false);
+			selectionButton.setSelected(true);
 		});
 
 		//Botón para desagrupar
 		ungroupButton.setOnAction(event -> {
 			figureGroups.ungroup(figureSelection);
 			resetSelection();
-			ungroupButton.setSelected(false);
+			ungroupButton.setSelected(false); //todo quizas solo debería deseleccionar sí encontró algo para desagrupar;
+			figureSelection.clear();
+			redrawCanvas();
 		});
 
 		//Botón para rotar a la derecha
