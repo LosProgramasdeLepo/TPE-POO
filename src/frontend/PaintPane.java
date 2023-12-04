@@ -111,19 +111,21 @@ public class PaintPane extends BorderPane {
 			figureSelection.clear();
 			selectionActive = false;
 			redrawCanvas();
+			ungroupButton.setSelected(false);
 		});
 
 		groupButton.setOnAction(event -> {
 			figureGroups.group(figureSelection);
-			System.out.println(figureGroups.size());
-			for(FigureSelection figureSelection1: figureGroups){
-				System.out.println(figureSelection1.toString());
-			}
+			ungroupButton.setSelected(false);
 		});
 
 		ungroupButton.setOnAction(event -> { //todo esto no funciona
 			figureGroups.ungroup(figureSelection);
-			System.out.println(figureGroups.size());
+			selectionActive = false;
+			selectionButton.setSelected(false);
+			figureSelection.clear();
+			redrawCanvas();
+			ungroupButton.setSelected(false);
 		});
 
 		rectangleButton.setOnAction(event -> { //todo todos estos eventos son iguales, deberían ser un método aparte..
@@ -165,6 +167,7 @@ public class PaintPane extends BorderPane {
 
 	private void onMouseRelease(MouseEvent mouseEvent) {
 		if(startPoint == null) return;
+
 		Point endPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 		if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) return;
 
@@ -174,21 +177,13 @@ public class PaintPane extends BorderPane {
 		//Si activé el botón de selección...
 		if(selectedButton == selectionButton) {
 			//Debo sacar lo seleccionado
-			if(!figureSelection.isEmpty()){
-				Figure topFigure = canvasState.getTopFigureAt(endPoint);
-				//Si no hay una figura...
-				if (topFigure == null){
-					figureSelection.clear();
-				}
-				figureSelection.clear();
-			}
+			figureSelection.clear();
 			if(startPoint.distanceTo(endPoint) > 1) {
 				Rectangle container = Rectangle.createFrom(startPoint, endPoint);
 				//Modifica figureSelection directamente
 				canvasState.figuresContainedIn(container, figureSelection);
-				System.out.println(figureSelection); //todo ojo sacar -> sí funciona
 				//Si la colección de figuras seleccionadas está vacía, no se encontró ninguna
-				if(figureSelection.isEmpty()) {statusPane.updateStatus("Ninguna figura encontrada");}
+				if(figureSelection.isEmpty()) statusPane.updateStatus("Ninguna figura encontrada");
 				//En otro caso, hay una o más
 				else {
 					//Recorro las figuras seleccionadas
@@ -203,7 +198,6 @@ public class PaintPane extends BorderPane {
 					else statusPane.updateStatus("Se seleccionaron %d figuras".formatted(figureSelection.size()));
 				}
 			}
-			//Hago esto para pushear de vuelta
 			//Si el rectángulo formado es muy pequeño, solo elige la figura de arriba
 			else {
 				Figure topFigure = canvasState.getTopFigureAt(endPoint);
@@ -240,7 +234,7 @@ public class PaintPane extends BorderPane {
 	}
 
 	private void onMouseDragged(MouseEvent mouseEvent) {
-		if(!figureSelection.isEmpty() && selectionButton.isSelected()) {
+		if(!figureSelection.isEmpty()) {
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 			double diffX = (eventPoint.getX() - startPoint.getX());
 			double diffY = (eventPoint.getY() - startPoint.getY());
@@ -254,36 +248,34 @@ public class PaintPane extends BorderPane {
 
 	private void getOnMouseClicked(MouseEvent mouseEvent) {
 		if(selectionButton.isSelected()) {
+			if(selectionActive) return;
+
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
+
 			//Recorro las figuras en el canvas, buscando si hay alguna en donde hice click
 			Figure foundFigure = canvasState.getTopFigureAt(eventPoint);
+
 			//Si encuentra una figura...
 			if(foundFigure != null) {
-				//si ya había una figura seleccionada, cambio la selección hacia mi nueva figura
-				if(selectionActive && !figureSelection.contains(foundFigure) ) {
-					figureSelection.clear();
-					redrawCanvas();
-					figureSelection.add(foundFigure);
-					redrawCanvas();
-				};
-				selectionActive = true; //si no había ninguna seleccionada, ahora la hay
-				figureSelection.add(foundFigure);
-				redrawCanvas();
+				selectionActive = true;
 				//Si esa figura está en un grupo, hace que la selección sea ese grupo
-			//	if(figureGroups.findGroup(foundFigure) != null) {
-			//		figureSelection.addAll(figureGroups.findGroup(foundFigure));
-			//	}
+				if(figureGroups.findGroup(foundFigure) != null) {
+					figureSelection.addAll(figureGroups.findGroup(foundFigure));
+				}
 				//Sino, le pone a la figura los efectos propios
-			//	else {
-			//		effectsPane.shadeBox.setSelected(foundFigure.hasShadow());
-			//		effectsPane.gradientBox.setSelected(foundFigure.hasGradient());
-			//		effectsPane.bevelBox.setSelected(foundFigure.hasBevel());
-			//	}
+				else {
+					effectsPane.shadeBox.setSelected(foundFigure.hasShadow());
+					effectsPane.gradientBox.setSelected(foundFigure.hasGradient());
+					effectsPane.bevelBox.setSelected(foundFigure.hasBevel());
+				}
 			}
+
 			//Si no encontró la figura, limpia la selección
 			else {
 				figureSelection.clear();
 			}
+
+
 		}
 	}
 
