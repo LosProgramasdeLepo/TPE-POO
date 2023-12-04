@@ -270,32 +270,38 @@ public class PaintPane extends BorderPane {
 		//Botón para rotar a la derecha
 		rotateRightButton.setOnAction(event -> {
 			rotateRightButton.setSelected(false);
+			figureSelection.rotateRight();
 			redrawCanvas();
 		});
 
 		//Botón para rotar horizontalmente
 		flipHorizontallyButton.setOnAction(event -> {
 			flipHorizontallyButton.setSelected(false);
+			figureSelection.flipHorizontally();
 			redrawCanvas();
 		});
 
 		//Botón para rotar verticalmente
 		flipVerticallyButton.setOnAction(event -> {
 			flipVerticallyButton.setSelected(false);
+			figureSelection.flipVertically();
 			redrawCanvas();
 		});
 
 		//Botón para aumentar el tamaño de la figura
 		scaleUpButton.setOnAction(event -> {
 			scaleUpButton.setSelected(false);
+			figureSelection.scaleUp();
 			redrawCanvas();
 		});
 
 		//Botón para disminuir el tamaño de la figura
 		scaleDownButton.setOnAction(event -> {
 			scaleDownButton.setSelected(false);
+			figureSelection.scaleDown();
 			redrawCanvas();
 		});
+
 
 		//Botón para crear un rectángulo
 		rectangleButton.setOnAction(event -> resetSelection());

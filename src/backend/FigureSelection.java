@@ -24,13 +24,35 @@ public class FigureSelection extends HashSet<Figure> {
             figure.modifyBevel(status);
         }
     }
-    //todo MAL MAL SACARLO es para tests solamente
-    public String toString(){
-        String result= "Resultado:" ;
-        for(Figure figure: this ){
-            result += figure.toString();
+
+    public void rotateRight() {
+        for (Figure figure : this) {
+            figure.rotateRight();
         }
-        return result;
+    }
+    public void flipHorizontally() {
+        for (Figure figure : this) {
+            figure.flipHorizontally();
+        }
+    }
+
+    public void flipVertically() {
+        for (Figure figure : this) {
+            figure.flipVertically();
+        }
+    }
+
+
+    public void scaleUp() {
+        for (Figure figure : this) {
+            figure.scaleUp();
+        }
+    }
+
+    public void scaleDown() {
+        for (Figure figure : this) {
+            figure.scaleDown();
+        }
     }
 
     @Override
@@ -41,6 +63,7 @@ public class FigureSelection extends HashSet<Figure> {
         FigureSelection otherSelection = (FigureSelection) obj;
         return this.containsAll(otherSelection) && otherSelection.containsAll(this);
     }
+
     @Override
     public int hashCode(){
         int hashCode = 1;
@@ -49,5 +72,7 @@ public class FigureSelection extends HashSet<Figure> {
         }
         return hashCode;
     }
+
+
 
 }
