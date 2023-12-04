@@ -116,6 +116,7 @@ public class PaintPane extends BorderPane {
 
 		groupButton.setOnAction(event -> {
 			figureGroups.group(figureSelection);
+			ungroupButton.setSelected(false);
 		});
 
 		ungroupButton.setOnAction(event -> { //todo esto no funciona
