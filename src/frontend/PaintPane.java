@@ -48,7 +48,6 @@ public class PaintPane extends BorderPane {
 	final ToggleButton flipVerticallyButton = new ToggleButton("Voltear V");
 	final ToggleButton scaleUpButton = new ToggleButton("Escalar +");
 	final ToggleButton scaleDownButton = new ToggleButton("Escalar -");
-
 	final ToggleGroup tools = new ToggleGroup();
 
 	//Selector de color de relleno
@@ -206,9 +205,7 @@ public class PaintPane extends BorderPane {
 			}
 		}
 		//Caso: No selection button is pressed (figure creation)
-		else {
-			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint, this);
-		}
+		else ((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint, this);
 
 		redrawCanvas();
 	}
@@ -260,21 +257,21 @@ public class PaintPane extends BorderPane {
 	}
 
 	private void setButtons() {
-		//figures deletion
+		//Figures deletion
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
 			resetSelection();
 			deleteButton.setSelected(false);
 		});
 
-		//figure grouping
+		//Figure grouping
 		groupButton.setOnAction(event -> {
 			figureGroups.group(figureSelection, canvasState);
 			groupButton.setSelected(false);
 			selectionButton.setSelected(true);
 		});
 
-		//figure degrouping
+		//Figure degrouping
 		ungroupButton.setOnAction(event -> {
 			figureGroups.ungroup(figureSelection);
 			resetSelection();
@@ -282,7 +279,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//figure rotation
+		//Figure rotation
 		rotateRightButton.setOnAction(event -> {
 			rotateRightButton.setSelected(false);
 			figureSelection.rotateRight();
@@ -290,7 +287,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//figure flipping (horizontal)
+		//Figure flipping (horizontal)
 		flipHorizontallyButton.setOnAction(event -> {
 			flipHorizontallyButton.setSelected(false);
 			figureSelection.flipHorizontally();
@@ -298,7 +295,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//figure flipping (vertical)
+		//Figure flipping (vertical)
 		flipVerticallyButton.setOnAction(event -> {
 			flipVerticallyButton.setSelected(false);
 			figureSelection.flipVertically();
@@ -349,6 +346,7 @@ public class PaintPane extends BorderPane {
 
 	//Upper effects panel class
 	private class EffectsPane extends HBox {
+
 		final Label label = new Label("Efectos:\t");
 		final CheckBox shadowBox = new CheckBox("Sombra");
 		final CheckBox gradientBox = new CheckBox("Gradiente");
@@ -373,7 +371,6 @@ public class PaintPane extends BorderPane {
                     if(new_val) figureSelection.modifyShadow(true);
                     if(!new_val) figureSelection.modifyShadow(false);
                 }
-				System.out.println(figureSelection);
                 redrawCanvas();
             });
 
@@ -410,6 +407,7 @@ public class PaintPane extends BorderPane {
 			else effectsPane.bevelBox.setSelected(figureSelection.hasBevel());
 		}
 
+		//Necessary for removing the indeterminate status from the checkboxes
 		void clearIndeterminate() {
 			effectsPane.shadowBox.setIndeterminate(false);
 			effectsPane.gradientBox.setIndeterminate(false);

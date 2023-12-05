@@ -56,7 +56,9 @@ public class FigureSelection extends HashSet<Figure> implements Movable, Transfo
 
     @Override
     public void move(double deltaX,double deltaY){
-        for(Figure figure : this) figure.move(deltaX, deltaY);
+        for(Figure figure : this) {
+            figure.move(deltaX, deltaY);
+        }
     }
 
     public boolean hasShadow() {

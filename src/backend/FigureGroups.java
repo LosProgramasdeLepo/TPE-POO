@@ -7,9 +7,9 @@ import java.util.HashSet;
 public class FigureGroups extends HashSet<FigureSelection> {
 
     public void group(FigureSelection figureSelection, CanvasState canvasState) {
-        //If already belongs to a group, no new group is created
+        //If it already belongs to a group, no new group is created
         for(Figure figure : figureSelection) {
-            if(this.findGroup(figure) != null) {
+            if(findGroup(figure) != null) {
                 return;
             }
         }
@@ -20,11 +20,11 @@ public class FigureGroups extends HashSet<FigureSelection> {
                 newFigureGroup.add(canvasState.getFigure(figure));
             }
         }
-        this.add(newFigureGroup);
+        add(newFigureGroup);
     }
 
     public void ungroup(FigureSelection figureSelection) {
-        this.remove(figureSelection);
+        remove(figureSelection);
     }
 
     public FigureSelection findGroup(Figure figure) {
