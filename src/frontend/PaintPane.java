@@ -159,9 +159,7 @@ public class PaintPane extends BorderPane {
 							if (figureGroups.findGroup(figure) != null) {					//todo esto podría ser una función
 								figureSelection.addAll(figureGroups.findGroup(figure));
 							}
-							else{
-								figureSelection.add(figure);
-							}
+							else figureSelection.add(figure);
 						}
 						statusPane.updateStatusGivenSelection(figureSelection);
 					}
@@ -174,7 +172,6 @@ public class PaintPane extends BorderPane {
 							figureSelection.clear();
 							redrawCanvas();
 						}
-
 
 						//Caso: La figura pertenece a un grupo
 						if (figureGroups.findGroup(foundFigure) != null) {				//todo esto podría ser una función (se repite acá)
@@ -307,7 +304,6 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-
 		//Botón para crear un rectángulo
 		rectangleButton.setOnAction(event -> resetSelection());
 
@@ -343,7 +339,7 @@ public class PaintPane extends BorderPane {
 			setPrefWidth(100);
 
 			shadeBox.selectedProperty().addListener((ov, old_val, new_val) -> {
-                if(!figureSelection.isEmpty()){
+                if(!figureSelection.isEmpty()) {
                     if(new_val) figureSelection.modifyShadow(true);
                     if(!new_val) figureSelection.modifyShadow(false);
                 }
@@ -351,7 +347,7 @@ public class PaintPane extends BorderPane {
             });
 
 			bevelBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
-                if(!figureSelection.isEmpty()){
+                if(!figureSelection.isEmpty()) {
                     if(t1) figureSelection.modifyBevel(true);
                     if(!t1) figureSelection.modifyBevel(false);
                 }
@@ -359,7 +355,7 @@ public class PaintPane extends BorderPane {
             });
 
 			gradientBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
-                if(!figureSelection.isEmpty()){
+                if(!figureSelection.isEmpty()) {
                     if(t1) figureSelection.modifyGradient(true);
                     if(!t1) figureSelection.modifyGradient(false);
                 }
