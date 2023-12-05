@@ -9,8 +9,9 @@ public class CanvasState extends ArrayList<Figure> {
     public Figure getTopFigureAt(Point point) {
         for (int i = this.size() - 1; i >= 0; i--) {
             Figure figure = this.get(i);
-            if (figure.figureBelongs(point))
+            if (figure.figureBelongs(point)) {
                 return figure;
+            }
         }
         return null;
     }
@@ -24,8 +25,8 @@ public class CanvasState extends ArrayList<Figure> {
     }
 
     public Figure getFigure(Figure figure){
-        for(Figure existing : this){
-            if(existing.equals(figure)){
+        for(Figure existing : this) {
+            if(existing.equals(figure)) {
                 return figure;
             }
         }

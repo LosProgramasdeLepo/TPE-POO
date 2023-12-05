@@ -3,7 +3,6 @@ package backend;
 import backend.model.Figure;
 
 import java.util.HashSet;
-import java.util.Objects;
 
 public class FigureSelection extends HashSet<Figure> {
 
@@ -54,25 +53,6 @@ public class FigureSelection extends HashSet<Figure> {
             figure.scaleDown();
         }
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        FigureSelection otherSelection = (FigureSelection) obj;
-        return this.containsAll(otherSelection) && otherSelection.containsAll(this);
-    }
-
-    @Override
-    public int hashCode(){
-        int hashCode = 1;
-        for(Figure figure : this){
-            hashCode = 31 * hashCode + Objects.hashCode(figure);
-        }
-        return hashCode;
-    }
-
 
 
 }

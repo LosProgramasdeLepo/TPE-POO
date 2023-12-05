@@ -6,11 +6,9 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 
-import java.awt.geom.AffineTransform;
-
 public class Rectangle extends Figure {
 
-    private Point topLeft, bottomRight;
+    private final Point topLeft, bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
         super(new Point[]{topLeft, bottomRight});
@@ -34,10 +32,6 @@ public class Rectangle extends Figure {
         return bottomRight.getY() - topLeft.getY();
     }
 
-    private Point getCenter() {
-        return new Point(getWidth()/2, getHeight()/2);
-    }
-
     @Override
     public String toString() {
         return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
@@ -45,8 +39,8 @@ public class Rectangle extends Figure {
 
     @Override
     public boolean figureBelongs(Point eventPoint){
-        return (eventPoint.getX() > this.getTopLeft().getX() && eventPoint.getX() < this.getBottomRight().getX() &&
-                eventPoint.getY() > this.getTopLeft().getY() && eventPoint.getY() < this.getBottomRight().getY());
+        return (eventPoint.getX() > getTopLeft().getX() && eventPoint.getX() < getBottomRight().getX() &&
+                eventPoint.getY() > getTopLeft().getY() && eventPoint.getY() < getBottomRight().getY());
     }
 
     @Override
@@ -66,33 +60,29 @@ public class Rectangle extends Figure {
                     new Stop(1, getFillColor().invert()));
             gc.setFill(linearGradient);
         }
-        else {
-            gc.setFill(getFillColor());
-        }
+        else gc.setFill(getFillColor());
         gc.fillRect(getTopLeft().getX(), getTopLeft().getY(), getWidth(), getHeight());
         gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), getWidth(), getHeight());
-
     }
 
-    public static Rectangle createFrom(Point startPoint, Point endPoint){
+    public static Rectangle createFrom(Point startPoint, Point endPoint) {
         return new Rectangle(startPoint, endPoint);
     }
 
     @Override
     public void addShadow(GraphicsContext gc) {
         gc.setFill(Color.GRAY);
-        gc.fillRect(this.getTopLeft().getX() + 10.0,
-                this.getTopLeft().getY() + 10.0,
-                Math.abs(this.getTopLeft().getX() - this.getBottomRight().getX()),
-                Math.abs(this.getTopLeft().getY() - this.getBottomRight().getY()));
+        gc.fillRect(getTopLeft().getX() + 10.0, getTopLeft().getY() + 10.0,
+                Math.abs(getTopLeft().getX() - getBottomRight().getX()),
+                Math.abs(getTopLeft().getY() - getBottomRight().getY()));
     }
 
     @Override
     public void addBevel(GraphicsContext gc) {
-        double x = this.getTopLeft().getX();
-        double y = this.getTopLeft().getY();
-        double width = Math.abs(x - this.getBottomRight().getX());
-        double height = Math.abs(y - this.getBottomRight().getY());
+        double x = getTopLeft().getX();
+        double y = getTopLeft().getY();
+        double width = Math.abs(x - getBottomRight().getX());
+        double height = Math.abs(y - getBottomRight().getY());
         gc.setLineWidth(10);
         gc.setStroke(Color.LIGHTGRAY);
         gc.strokeLine(x, y, x + width, y);
@@ -107,12 +97,12 @@ public class Rectangle extends Figure {
         double widthAux = getWidth();
         double heightAux = getHeight();
         if(getHeight() <= getWidth()) {
-            this.topLeft.move(widthAux/2 - heightAux/2, heightAux/2 - widthAux/2);
-            this.bottomRight.move(-widthAux/2 + heightAux/2, -heightAux/2 + widthAux/2);
+            topLeft.move(widthAux/2 - heightAux/2, heightAux/2 - widthAux/2);
+            bottomRight.move(-widthAux/2 + heightAux/2, -heightAux/2 + widthAux/2);
         }
         else {
-            this.bottomRight.move(-widthAux/2 + heightAux/2, -heightAux/2 + widthAux/2);
-            this.topLeft.move(widthAux/2 - heightAux/2, heightAux/2 - widthAux/2);
+            bottomRight.move(-widthAux/2 + heightAux/2, -heightAux/2 + widthAux/2);
+            topLeft.move(widthAux/2 - heightAux/2, heightAux/2 - widthAux/2);
         }
     }
 
@@ -146,19 +136,21 @@ public class Rectangle extends Figure {
         }
     }
 
+    //todo quizas hacer en figure una constante para los 0.25. A lo mejor el 0.25 debe venir del front?
+
     @Override
     public void scaleUp() {
         scale(0.25);
     }
 
-    //todo quizas hacer en figure una constante para los 0.25
     @Override
     public void scaleDown() {
         scale(-0.25);
     }
-    private void scale(double percent){
-        double deltaX = (percent/2)*getWidth();
-        double deltaY = (percent/2)* getHeight();
+
+    private void scale(double percent) {
+        double deltaX = (percent/2) * getWidth();
+        double deltaY = (percent/2) * getHeight();
         topLeft.move(-deltaX, -deltaY);
         bottomRight.move(deltaX,deltaY);
     }

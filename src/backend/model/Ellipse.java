@@ -46,8 +46,8 @@ public class Ellipse extends Figure {
 
     @Override
     public boolean figureBelongs(Point eventPoint) {
-        return (((Math.pow(eventPoint.getX() - this.getCenterPoint().getX(), 2) / Math.pow(this.getsMayorAxis(), 2)) +
-                (Math.pow(eventPoint.getY() - this.getCenterPoint().getY(), 2) / Math.pow(this.getsMinorAxis(), 2))) <= 0.30);
+        return (((Math.pow(eventPoint.getX() - getCenterPoint().getX(), 2) / Math.pow(getsMayorAxis(), 2)) +
+                (Math.pow(eventPoint.getY() - getCenterPoint().getY(), 2) / Math.pow(getsMinorAxis(), 2))) <= 0.30);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class Ellipse extends Figure {
                     new Stop(1, getFillColor().invert()));
             gc.setFill(radialGradient);
         }
-        else gc.setFill(this.getFillColor());
+        else gc.setFill(getFillColor());
         gc.fillOval(getCenterPoint().getX() - getXRadius(), getCenterPoint().getY() - getYRadius(), getsMayorAxis(), getsMinorAxis());
         gc.strokeOval(getCenterPoint().getX() - getXRadius(), getCenterPoint().getY() - getYRadius(), getsMayorAxis(), getsMinorAxis());
     }
@@ -83,19 +83,18 @@ public class Ellipse extends Figure {
     @Override
     public void addShadow(GraphicsContext gc) {
         gc.setFill(Color.GRAY);
-        gc.fillOval(this.getCenterPoint().getX() - this.getXRadius() + 10.0,
-                this.getCenterPoint().getY() - this.getYRadius() + 10.0, this.sMayorAxis, this.sMinorAxis );
+        gc.fillOval(getCenterPoint().getX() - getXRadius() + 10.0, getCenterPoint().getY() - getYRadius() + 10.0, sMayorAxis, sMinorAxis );
     }
 
     @Override
     public void addBevel(GraphicsContext gc) {
-        double arcX = this.getCenterPoint().getX() - this.getXRadius();
-        double arcY = this.getCenterPoint().getY() - this.getYRadius();
+        double arcX = getCenterPoint().getX() - getXRadius();
+        double arcY = getCenterPoint().getY() - getYRadius();
         gc.setLineWidth(10);
         gc.setStroke(Color.LIGHTGRAY);
-        gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 45, 180, ArcType.OPEN);
+        gc.strokeArc(arcX, arcY, getsMayorAxis(), getsMinorAxis() , 45, 180, ArcType.OPEN);
         gc.setStroke(Color.BLACK);
-        gc.strokeArc(arcX, arcY, this.getsMayorAxis(), this.getsMinorAxis() , 225, 180, ArcType.OPEN);
+        gc.strokeArc(arcX, arcY, getsMayorAxis(), getsMinorAxis() , 225, 180, ArcType.OPEN);
         gc.setLineWidth(1);
     }
 
@@ -111,11 +110,11 @@ public class Ellipse extends Figure {
         double deltaX = this.sMayorAxis;
         if(!isInvertedH) {
             isInvertedH = true;
-            this.centerPoint.move(deltaX, 0);
+            centerPoint.move(deltaX, 0);
         }
         else {
             isInvertedH = false;
-            this.centerPoint.move(-deltaX, 0);
+            centerPoint.move(-deltaX, 0);
         }
     }
 
@@ -124,24 +123,27 @@ public class Ellipse extends Figure {
         double deltaY = this.sMinorAxis;
         if(!isInvertedH) {
             isInvertedH = true;
-            this.centerPoint.move(0, deltaY);
+            centerPoint.move(0, deltaY);
         }
         else {
             isInvertedH = false;
-            this.centerPoint.move(0, -deltaY);
+            centerPoint.move(0, -deltaY);
         }
+    }
+
+    public void scale(double percent) {
+        sMayorAxis *= percent;
+        sMinorAxis *= percent;
     }
 
     @Override
     public void scaleUp() {
-        sMayorAxis *= 1.25;
-        sMinorAxis *= 1.25;
+        scale(1.25);
     }
 
     @Override
     public void scaleDown() {
-        sMayorAxis *= 0.75;
-        sMinorAxis *= 0.75;
+        scale(0.75);
     }
 
 }
