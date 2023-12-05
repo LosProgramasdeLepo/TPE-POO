@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
 
 public class PaintPane extends BorderPane {
 
-
 	//BackEnd
 	CanvasState canvasState;
 
@@ -53,19 +52,19 @@ public class PaintPane extends BorderPane {
 	final ToggleGroup tools = new ToggleGroup();
 
 	//Selector de color de relleno
-	private ColorPicker fillColorPicker = new ColorPicker(DEFAULT_FILL_COLOR);
+	private final ColorPicker fillColorPicker = new ColorPicker(DEFAULT_FILL_COLOR);
 
 	//Dibujar una figura
 	private Point startPoint;
 
 	//Selected figures collection
-	private FigureSelection figureSelection = new FigureSelection();
+	private final FigureSelection figureSelection = new FigureSelection();
 
 	//Grouped figures collection
-	private FigureGroups figureGroups = new FigureGroups();
+	private final FigureGroups figureGroups = new FigureGroups();
 
 	//StatusBar
-	private StatusPane statusPane;
+	private final StatusPane statusPane;
 
 	//EffectsBar
 	EffectsPane effectsPane = new EffectsPane();
@@ -135,11 +134,12 @@ public class PaintPane extends BorderPane {
 		if(selectedButton == selectionButton) {
 			Figure foundFigure = canvasState.getTopFigureAt(endPoint);
 
-			//Case:Was moving figures (if click is outside the figures, they are de-selected)
+			//Case: Was moving figures (if click is outside the figures, they are de-selected)
 			if(wasMoving) {
 				if(foundFigure == null) {
 					wasMoving = false;
 					figureSelection.clear();
+					effectsPane.clearIndeterminate();
 					redrawCanvas();
 				}
 				return;
@@ -153,7 +153,10 @@ public class PaintPane extends BorderPane {
 					canvasState.figuresContainedIn(container, figureSelection);
 
 					//Case: No figures found
-					if (figureSelection.isEmpty()) statusPane.updateStatusGivenSelection(figureSelection);
+					if (figureSelection.isEmpty()) {
+						statusPane.updateStatusGivenSelection(figureSelection);
+						effectsPane.clearIndeterminate();
+					}
 
 					//Case: There is one or more figures found
 					else {
@@ -162,10 +165,12 @@ public class PaintPane extends BorderPane {
 							if (figureGroups.findGroup(figure) != null) {
 								figureSelection.addAll(figureGroups.findGroup(figure));
 							}
-							else figureSelection.add(figure);
+							else {
+								figureSelection.add(figure);
+							}
 						}
+						effectsPane.getSelectionEffects(figureSelection);
 						statusPane.updateStatusGivenSelection(figureSelection);
-						//todo acá poner que se modifican los checkbox
 					}
 				}
 				//Case: Click selection
@@ -174,26 +179,36 @@ public class PaintPane extends BorderPane {
 					if(foundFigure != null) {
 						if(!figureSelection.isEmpty()) {
 							figureSelection.clear();
+							effectsPane.clearIndeterminate();
 							redrawCanvas();
 						}
 
 						//Case: Figure belongs to a group
 						if (figureGroups.findGroup(foundFigure) != null) {
 							figureSelection.addAll(figureGroups.findGroup(foundFigure));
+							effectsPane.getSelectionEffects(figureSelection);
 						}
 
 						//Case: Figure does not belong to a group
-						else figureSelection.add(foundFigure);
+						else {
+							figureSelection.add(foundFigure);
+							effectsPane.getFigureEffects(foundFigure);
+						}
 
 						statusPane.updateStatusGivenSelection(figureSelection);
 					}
 					//Case: No figures found.
-					else figureSelection.clear();
+					else {
+						figureSelection.clear();
+						effectsPane.clearIndeterminate();
+					}
 				}
 			}
 		}
 		//Caso: No selection button is pressed (figure creation)
-		else ((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
+		else {
+			((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint, this);
+		}
 
 		redrawCanvas();
 	}
@@ -225,6 +240,7 @@ public class PaintPane extends BorderPane {
 			if(figure.hasShadow()) figure.addShadow(gc);
 			if(figure.hasBevel()) figure.addBevel(gc);
 			//Red border if figure is selected (otherwise back border)
+			System.out.println(figureSelection.contains(figure)); //todo
 			gc.setStroke(figureSelection.contains(figure) ? DEFAULT_SELECTED_LINE_COLOR : DEFAULT_LINE_COLOR);
 			figure.draw(gc);
 		}
@@ -264,8 +280,6 @@ public class PaintPane extends BorderPane {
 			figureGroups.ungroup(figureSelection);
 			resetSelection();
 			ungroupButton.setSelected(false);
-			figureSelection.clear();
-			selectionButton.setSelected(true);
 			redrawCanvas();
 		});
 
@@ -322,13 +336,25 @@ public class PaintPane extends BorderPane {
 		circleButton.setOnAction(event -> resetSelection());
 	}
 
-	//Upper effects pannel class
+	public boolean getCanvasShadow() {
+		return effectsPane.shadowBox.isSelected();
+	}
+
+	public boolean getCanvasGradient() {
+		return effectsPane.gradientBox.isSelected();
+	}
+
+	public boolean getCanvasBevel() {
+		return effectsPane.bevelBox.isSelected();
+	}
+
+	//Upper effects panel class
 	private class EffectsPane extends HBox {
 		final Label label = new Label("Efectos:\t");
-		final CheckBox shadeBox = new CheckBox("Sombra");
+		final CheckBox shadowBox = new CheckBox("Sombra");
 		final CheckBox gradientBox = new CheckBox("Gradiente");
 		final CheckBox bevelBox = new CheckBox("Biselado");
-		final CheckBox[] effectsArr = {shadeBox, gradientBox, bevelBox};
+		final CheckBox[] effectsArr = {shadowBox, gradientBox, bevelBox};
 
 		public EffectsPane() {
 			for (CheckBox effect : effectsArr) {
@@ -343,7 +369,7 @@ public class PaintPane extends BorderPane {
 			setStyle("-fx-background-color: #999");
 			setPrefWidth(100);
 
-			shadeBox.selectedProperty().addListener((ov, old_val, new_val) -> {
+			shadowBox.selectedProperty().addListener((observableValue, old_val, new_val) -> {
                 if(!figureSelection.isEmpty()) {
                     if(new_val) figureSelection.modifyShadow(true);
                     if(!new_val) figureSelection.modifyShadow(false);
@@ -351,22 +377,43 @@ public class PaintPane extends BorderPane {
                 redrawCanvas();
             });
 
-			bevelBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+			bevelBox.selectedProperty().addListener((observableValue, old_val, new_val) -> {
                 if(!figureSelection.isEmpty()) {
-                    if(t1) figureSelection.modifyBevel(true);
-                    if(!t1) figureSelection.modifyBevel(false);
+                    if(new_val) figureSelection.modifyBevel(true);
+                    if(!new_val) figureSelection.modifyBevel(false);
                 }
                 redrawCanvas();
             });
 
-			gradientBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+			gradientBox.selectedProperty().addListener((observableValue, old_val, new_val) -> {
                 if(!figureSelection.isEmpty()) {
-                    if(t1) figureSelection.modifyGradient(true);
-                    if(!t1) figureSelection.modifyGradient(false);
+                    if(new_val) figureSelection.modifyGradient(true);
+                    if(!new_val) figureSelection.modifyGradient(false);
                 }
                 redrawCanvas();
             });
 
+		}
+
+		void getFigureEffects(Figure figure) {
+			effectsPane.shadowBox.setSelected(figure.hasShadow());
+			effectsPane.gradientBox.setSelected(figure.hasGradient());
+			effectsPane.bevelBox.setSelected(figure.hasBevel());
+		}
+
+		void getSelectionEffects(FigureSelection figureSelection) {
+			if(figureSelection.atLeastOneHasShadow() && !figureSelection.hasShadow()) effectsPane.shadowBox.setIndeterminate(true);
+			else effectsPane.shadowBox.setSelected(figureSelection.hasShadow());
+			if(figureSelection.atLeastOneHasGradient() && !figureSelection.hasGradient()) effectsPane.gradientBox.setIndeterminate(true);
+			else effectsPane.gradientBox.setSelected(figureSelection.hasGradient());
+			if(figureSelection.atLeastOneHasBevel() && !figureSelection.hasBevel()) effectsPane.bevelBox.setIndeterminate(true);
+			else effectsPane.bevelBox.setSelected(figureSelection.hasBevel());
+		}
+
+		void clearIndeterminate() {
+			effectsPane.shadowBox.setIndeterminate(false);
+			effectsPane.gradientBox.setIndeterminate(false);
+			effectsPane.bevelBox.setIndeterminate(false);
 		}
 
 	}

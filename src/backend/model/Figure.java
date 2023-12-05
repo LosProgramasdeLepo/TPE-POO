@@ -73,20 +73,25 @@ public abstract class Figure implements Movable, Drawable, Effects, Transformabl
 
     @Override
     public abstract void addBevel(GraphicsContext gc);
+
     @Override
     public void addGradient(GraphicsContext gc) {
         draw(gc);
     }
+
     @Override
     public abstract void rotateRight();
+
     @Override
     public abstract void flipHorizontally();
+
     @Override
     public abstract void flipVertically();
+
     @Override
     public abstract void scale(double percent);
 
-   @Override
+    @Override
     public int hashCode() {
        return Objects.hash(Arrays.hashCode(points), bevel, shadow, gradient, fillColor);
    }

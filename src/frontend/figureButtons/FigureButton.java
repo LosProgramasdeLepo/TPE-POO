@@ -9,14 +9,17 @@ public abstract class FigureButton {
     protected final CanvasState canvasState;
 
     public FigureButton(PaintPane paintPane, CanvasState canvasState){
-        this.canvasState= canvasState;
-        this.paintPane= paintPane;
+        this.canvasState = canvasState;
+        this.paintPane = paintPane;
     }
-    public void createAndAddFigure(Point startPoint, Point endPoint) {
+    public void createAndAddFigure(Point startPoint, Point endPoint, PaintPane paintPane) {
         try {
             Figure newFigure = createFigure(startPoint, endPoint);
             canvasState.add(newFigure);
             newFigure.setFillColor(paintPane.getColorFromPicker());
+            newFigure.modifyShadow(paintPane.getCanvasShadow());
+            newFigure.modifyGradient(paintPane.getCanvasGradient());
+            newFigure.modifyBevel(paintPane.getCanvasBevel());
         } catch (Exception e) {
             paintPane.getStatusPane().updateStatus(e.getMessage());
         }
