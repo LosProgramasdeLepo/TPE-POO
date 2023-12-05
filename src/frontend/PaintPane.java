@@ -271,6 +271,7 @@ public class PaintPane extends BorderPane {
 		rotateRightButton.setOnAction(event -> {
 			rotateRightButton.setSelected(false);
 			figureSelection.rotateRight();
+			selectionButton.setSelected(true);
 			redrawCanvas();
 		});
 
@@ -294,6 +295,7 @@ public class PaintPane extends BorderPane {
 		scaleUpButton.setOnAction(event -> {
 			scaleUpButton.setSelected(false);
 			figureSelection.scaleUp();
+			selectionButton.setSelected(true);
 			redrawCanvas();
 		});
 
@@ -301,6 +303,7 @@ public class PaintPane extends BorderPane {
 		scaleDownButton.setOnAction(event -> {
 			scaleDownButton.setSelected(false);
 			figureSelection.scaleDown();
+			selectionButton.setSelected(true);
 			redrawCanvas();
 		});
 
