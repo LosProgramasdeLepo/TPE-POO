@@ -10,7 +10,7 @@ import javafx.scene.shape.ArcType;
 public class Ellipse extends Figure {
 
     protected final Point centerPoint;
-    protected final double sMayorAxis, sMinorAxis;
+    protected double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
         super(new Point[]{centerPoint});
@@ -101,7 +101,9 @@ public class Ellipse extends Figure {
 
     @Override
     public void rotateRight() {
-
+        double auxiliarAxis = sMayorAxis;
+        sMayorAxis = sMinorAxis;
+        sMinorAxis = auxiliarAxis;
     }
 
     @Override
@@ -111,7 +113,7 @@ public class Ellipse extends Figure {
             isInvertedH = true;
             this.centerPoint.move(deltaX, 0);
         }
-        else{
+        else {
             isInvertedH = false;
             this.centerPoint.move(-deltaX, 0);
         }
@@ -132,12 +134,14 @@ public class Ellipse extends Figure {
 
     @Override
     public void scaleUp() {
-
+        sMayorAxis *= 1.25;
+        sMinorAxis *= 1.25;
     }
 
     @Override
     public void scaleDown() {
-
+        sMayorAxis *= 0.75;
+        sMinorAxis *= 0.75;
     }
 
 }

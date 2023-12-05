@@ -117,10 +117,10 @@ public class Rectangle extends Figure {
             topLeft.move(-deltaX, 0);
             bottomRight.move(-deltaX, 0);
         }
-        else{
+        else {
+            isInvertedH = false;
             topLeft.move(deltaX, 0);
             bottomRight.move(deltaX, 0);
-            isInvertedH = false;
         }
     }
 
@@ -132,10 +132,10 @@ public class Rectangle extends Figure {
             topLeft.move(0, -deltaY);
             bottomRight.move(0, -deltaY);
         }
-        else{
+        else {
+            isInvertedV = false;
             topLeft.move(0, deltaY);
             bottomRight.move(0, deltaY);
-            isInvertedV = false;
         }
     }
 
