@@ -18,6 +18,6 @@ Trabajo Final de Programación Orientada a Objetos. 2Q2023
 * Informe
 
 ## Modificaciones/Mejoras:
-* Falta ver bien lo de los botones de efecto cuando uno selecciona alguna/s figura/s
-* Implementar threestate checkbox
-* Implementar las alertas en el group/degroup
+* Falta ver bien lo de los botones de efecto cuando uno selecciona alguna/s figura/s (hecho)
+* Implementar threestate checkbox (hecho)
+* Implementar las alertas en el group/degroup 
