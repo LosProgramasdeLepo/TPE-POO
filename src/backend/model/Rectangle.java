@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
 
 public class Rectangle extends Figure {
 
-    private final Point topLeft, bottomRight;
+    private Point topLeft, bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
         super(new Point[]{topLeft, bottomRight});
@@ -85,7 +85,6 @@ public class Rectangle extends Figure {
                 this.getTopLeft().getY() + 10.0,
                 Math.abs(this.getTopLeft().getX() - this.getBottomRight().getX()),
                 Math.abs(this.getTopLeft().getY() - this.getBottomRight().getY()));
-
     }
 
     @Override
