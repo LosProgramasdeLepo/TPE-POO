@@ -111,16 +111,32 @@ public class Rectangle extends Figure {
 
     @Override
     public void flipHorizontally() {
-        double tempX = topLeft.getX();
-        topLeft.move(bottomRight.getX() - topLeft.getX(), 0);
-        bottomRight.move(tempX - bottomRight.getX(), 0);
+        double deltaX = this.getTopLeft().getX() - this.getBottomRight().getX();
+        if(!isInvertedH) {
+            isInvertedH = true;
+            topLeft.move(-deltaX, 0);
+            bottomRight.move(-deltaX, 0);
+        }
+        else{
+            topLeft.move(deltaX, 0);
+            bottomRight.move(deltaX, 0);
+            isInvertedH = false;
+        }
     }
 
     @Override
     public void flipVertically() {
-        double tempY = topLeft.getY();
-        topLeft.move(0, bottomRight.getY() - topLeft.getY());
-        bottomRight.move(0, tempY - bottomRight.getY());
+        double deltaY = this.getTopLeft().getY() - this.getBottomRight().getY();
+        if(!isInvertedV) {
+            isInvertedV = true;
+            topLeft.move(0, -deltaY);
+            bottomRight.move(0, -deltaY);
+        }
+        else{
+            topLeft.move(0, deltaY);
+            bottomRight.move(0, deltaY);
+            isInvertedV = false;
+        }
     }
 
     @Override

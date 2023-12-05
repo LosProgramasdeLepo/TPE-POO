@@ -278,6 +278,7 @@ public class PaintPane extends BorderPane {
 		flipHorizontallyButton.setOnAction(event -> {
 			flipHorizontallyButton.setSelected(false);
 			figureSelection.flipHorizontally();
+			selectionButton.setSelected(true);
 			redrawCanvas();
 		});
 
@@ -285,6 +286,7 @@ public class PaintPane extends BorderPane {
 		flipVerticallyButton.setOnAction(event -> {
 			flipVerticallyButton.setSelected(false);
 			figureSelection.flipVertically();
+			selectionButton.setSelected(true);
 			redrawCanvas();
 		});
 

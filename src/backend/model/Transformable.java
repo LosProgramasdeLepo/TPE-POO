@@ -1,6 +1,6 @@
 package backend.model;
 
-public interface Transformable extends Movable {
+public interface Transformable<F extends Movable> {
 
     void rotateRight();
 

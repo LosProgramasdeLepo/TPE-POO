@@ -106,12 +106,28 @@ public class Ellipse extends Figure {
 
     @Override
     public void flipHorizontally() {
-
+        double deltaX = this.sMayorAxis;
+        if(!isInvertedH) {
+            isInvertedH = true;
+            this.centerPoint.move(deltaX, 0);
+        }
+        else{
+            isInvertedH = false;
+            this.centerPoint.move(-deltaX, 0);
+        }
     }
 
     @Override
     public void flipVertically() {
-
+        double deltaY = this.sMinorAxis;
+        if(!isInvertedH) {
+            isInvertedH = true;
+            this.centerPoint.move(0, deltaY);
+        }
+        else {
+            isInvertedH = false;
+            this.centerPoint.move(0, -deltaY);
+        }
     }
 
     @Override

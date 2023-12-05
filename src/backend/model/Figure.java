@@ -8,10 +8,11 @@ import java.util.Objects;
 
 import static java.util.Objects.hash;
 
-public abstract class Figure implements Movable, Drawable, Effects, Transformable {
+public abstract class Figure implements Movable, Drawable, Effects, Transformable<Figure> {
     private boolean shadow, bevel, gradient;
     private final Point[] points;
     private Color fillColor;
+    protected boolean isInvertedH, isInvertedV;
 
     protected Figure(Point[] points) {
         this.points = points;
