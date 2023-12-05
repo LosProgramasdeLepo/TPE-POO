@@ -40,14 +40,17 @@ public abstract class Figure implements Movable, Drawable, Effects, Transformabl
 
     @Override
     public abstract void draw(GraphicsContext gc);
+    @Override
 
     public boolean hasShadow() {
         return shadow;
     }
+    @Override
 
     public boolean hasBevel() {
         return bevel;
     }
+    @Override
 
     public boolean hasGradient() {
         return gradient;
@@ -70,14 +73,22 @@ public abstract class Figure implements Movable, Drawable, Effects, Transformabl
 
     @Override
     public abstract void addBevel(GraphicsContext gc);
-
+    @Override
     public void addGradient(GraphicsContext gc) {
         draw(gc);
     }
+    @Override
+    public abstract void rotateRight();
+    @Override
+    public abstract void flipHorizontally();
+    @Override
+    public abstract void flipVertically();
+    @Override
+    public abstract void scale(double percent);
 
    @Override
     public int hashCode() {
-      return Objects.hash(Arrays.hashCode(points), bevel, shadow, gradient, fillColor);
-    }
+       return Objects.hash(Arrays.hashCode(points), bevel, shadow, gradient, fillColor);
+   }
 
 }

@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class PaintPane extends BorderPane {
+	private final double DEFAULT_SCALE_PERCENT = 0.25;
 
 	//BackEnd
 	CanvasState canvasState;
@@ -208,7 +209,7 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 			double diffX = (eventPoint.getX() - startPoint.getX());
 			double diffY = (eventPoint.getY() - startPoint.getY());
-			for (Figure figure : figureSelection) figure.move(diffX, diffY);
+			figureSelection.move(diffX,diffY);
 			startPoint.move(diffX, diffY);
 			redrawCanvas();
 			wasMoving = true;
@@ -259,8 +260,9 @@ public class PaintPane extends BorderPane {
 		ungroupButton.setOnAction(event -> {
 			figureGroups.ungroup(figureSelection);
 			resetSelection();
-			ungroupButton.setSelected(false); //todo quizas solo debería deseleccionar sí encontró algo para desagrupar;
+			ungroupButton.setSelected(false);
 			figureSelection.clear();
+			selectionButton.setSelected(true);
 			redrawCanvas();
 		});
 
@@ -291,7 +293,7 @@ public class PaintPane extends BorderPane {
 		//Botón para aumentar el tamaño de la figura
 		scaleUpButton.setOnAction(event -> {
 			scaleUpButton.setSelected(false);
-			figureSelection.scaleUp();
+			figureSelection.scale(DEFAULT_SCALE_PERCENT);
 			selectionButton.setSelected(true);
 			redrawCanvas();
 		});
@@ -299,7 +301,7 @@ public class PaintPane extends BorderPane {
 		//Botón para disminuir el tamaño de la figura
 		scaleDownButton.setOnAction(event -> {
 			scaleDownButton.setSelected(false);
-			figureSelection.scaleDown();
+			figureSelection.scale(-DEFAULT_SCALE_PERCENT);
 			selectionButton.setSelected(true);
 			redrawCanvas();
 		});

@@ -10,4 +10,8 @@ public interface Effects {
 
     void addGradient(GraphicsContext gc);
 
+    boolean hasShadow();
+    boolean hasBevel();
+    boolean hasGradient();
+
 }

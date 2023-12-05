@@ -138,17 +138,10 @@ public class Rectangle extends Figure {
 
     //todo quizas hacer en figure una constante para los 0.25. A lo mejor el 0.25 debe venir del front?
 
-    @Override
-    public void scaleUp() {
-        scale(0.25);
-    }
 
     @Override
-    public void scaleDown() {
-        scale(-0.25);
-    }
 
-    private void scale(double percent) {
+    public void scale(double percent) {
         double deltaX = (percent/2) * getWidth();
         double deltaY = (percent/2) * getHeight();
         topLeft.move(-deltaX, -deltaY);

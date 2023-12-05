@@ -8,8 +8,7 @@ public interface Transformable<F extends Movable> {
 
     void flipVertically();
 
-    void scaleUp();
+    void scale(double percent);
 
-    void scaleDown();
 
 }

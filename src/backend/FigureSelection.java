@@ -1,10 +1,13 @@
 package backend;
 
+import backend.model.Effects;
 import backend.model.Figure;
+import backend.model.Movable;
+import backend.model.Transformable;
 
 import java.util.HashSet;
 
-public class FigureSelection extends HashSet<Figure> {
+public class FigureSelection extends HashSet<Figure> implements Movable, Transformable<FigureSelection> {
 
     public void modifyShadow(boolean status) {
         for (Figure figure : this) {
@@ -23,36 +26,87 @@ public class FigureSelection extends HashSet<Figure> {
             figure.modifyBevel(status);
         }
     }
+    @Override
 
     public void rotateRight() {
         for (Figure figure : this) {
             figure.rotateRight();
         }
     }
+    @Override
     public void flipHorizontally() {
         for (Figure figure : this) {
             figure.flipHorizontally();
         }
     }
+    @Override
 
     public void flipVertically() {
         for (Figure figure : this) {
             figure.flipVertically();
         }
     }
+    @Override
 
-
-    public void scaleUp() {
+    public void scale(double percent){
         for (Figure figure : this) {
-            figure.scaleUp();
+            figure.scale(percent);
         }
     }
+    @Override
 
-    public void scaleDown() {
-        for (Figure figure : this) {
-            figure.scaleDown();
-        }
+    public void move(double deltaX,double deltaY){
+        for (Figure figure : this) figure.move(deltaX, deltaY);
     }
 
+    public boolean hasShadow() {
+        for(Figure figure: this){
+            if(!figure.hasShadow()){
+                return false;
+            }
+        }
+        return true;
+    }
 
+    public boolean hasBevel() {
+        for(Figure figure: this){
+            if(!figure.hasBevel()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean hasGradient() {
+        for(Figure figure: this){
+            if(!figure.hasBevel()){
+                return false;
+            }
+        }
+        return true;
+    }
+    public boolean atLeastOneHasShadow(){
+        for(Figure figure:this){
+            if(figure.hasShadow()){
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean atLeastOneHasBevel(){
+        for(Figure figure:this){
+            if(figure.hasBevel()){
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean atLeastOneHasGradient(){
+        for(Figure figure:this){
+            if(figure.hasGradient()){
+                return true;
+            }
+        }
+        return false;
+    }
 }

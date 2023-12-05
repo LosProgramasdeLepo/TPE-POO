@@ -130,20 +130,12 @@ public class Ellipse extends Figure {
             centerPoint.move(0, -deltaY);
         }
     }
-
+    @Override
     public void scale(double percent) {
-        sMayorAxis *= percent;
-        sMinorAxis *= percent;
+        sMayorAxis = sMayorAxis + sMayorAxis*percent;
+        sMinorAxis = sMinorAxis + sMinorAxis*percent;
     }
 
-    @Override
-    public void scaleUp() {
-        scale(1.25);
-    }
 
-    @Override
-    public void scaleDown() {
-        scale(0.75);
-    }
 
 }
