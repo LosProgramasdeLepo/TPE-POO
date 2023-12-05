@@ -103,19 +103,16 @@ public class Rectangle extends Figure {
         gc.setLineWidth(1);
     }
 
-    @Override
     public void rotateRight() {
-        System.out.println("%s, %s".formatted(topLeft,bottomRight));
-        double deltaX = (getCenter().getX() - getTopLeft().getX())/2;
-        double deltaY = (getCenter().getY() - getTopLeft().getY())/2;
-        if(getHeight()<=getWidth()) {
-            this.topLeft.move(deltaX, deltaY);
-            this.bottomRight.move(-deltaX,-deltaY);
-            System.out.println("%s,%s".formatted(topLeft,bottomRight));
+        double widthAux = getWidth();
+        double heightAux = getHeight();
+        if(getHeight() <= getWidth()) {
+            this.topLeft.move(widthAux/2 - heightAux/2, heightAux/2 - widthAux/2);
+            this.bottomRight.move(-widthAux/2 + heightAux/2, -heightAux/2 + widthAux/2);
         }
-        else{
-            this.topLeft.move(-deltaX, - deltaY);
-            this.bottomRight.move(deltaX, deltaY);
+        else {
+            this.bottomRight.move(-widthAux/2 + heightAux/2, -heightAux/2 + widthAux/2);
+            this.topLeft.move(widthAux/2 - heightAux/2, heightAux/2 - widthAux/2);
         }
     }
 
@@ -153,7 +150,8 @@ public class Rectangle extends Figure {
     public void scaleUp() {
         scale(0.25);
     }
-//todo quizas hacer en figure una constante para los 0.25
+
+    //todo quizas hacer en figure una constante para los 0.25
     @Override
     public void scaleDown() {
         scale(-0.25);
