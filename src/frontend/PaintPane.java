@@ -20,21 +20,22 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class PaintPane extends BorderPane {
-	private final double DEFAULT_SCALE_PERCENT = 0.25;
+
 
 	//BackEnd
 	CanvasState canvasState;
 
-	//Canvas y relacionados
+	//Canvas
 	Canvas canvas = new Canvas(800, 600);
 	GraphicsContext gc = canvas.getGraphicsContext2D();
 
-	//Constantes de colores
-	Color DEFAULT_LINE_COLOR = Color.BLACK;
-	Color DEFAULT_FILL_COLOR = Color.YELLOW;
-	Color DEFAULT_SELECTED_LINE_COLOR = Color.RED;
+	//Constants
+	private final Color DEFAULT_LINE_COLOR = Color.BLACK;
+	private final Color DEFAULT_FILL_COLOR = Color.YELLOW;
+	private final Color DEFAULT_SELECTED_LINE_COLOR = Color.RED;
+	private final double DEFAULT_SCALE_PERCENT = 0.25;
 
-	//Botones Barra Izquierda
+	//Left bar buttons
 	final ToggleButton selectionButton = new ToggleButton("Seleccionar");
 	final ToggleButton rectangleButton = new ToggleButton("Rectángulo");
 	final ToggleButton circleButton = new ToggleButton("Círculo");
@@ -52,27 +53,28 @@ public class PaintPane extends BorderPane {
 	final ToggleGroup tools = new ToggleGroup();
 
 	//Selector de color de relleno
-	ColorPicker fillColorPicker = new ColorPicker(DEFAULT_FILL_COLOR);
+	private ColorPicker fillColorPicker = new ColorPicker(DEFAULT_FILL_COLOR);
 
 	//Dibujar una figura
-	Point startPoint;
+	private Point startPoint;
 
-	//Set para figuras seleccionadas
-	FigureSelection figureSelection = new FigureSelection();
+	//Selected figures collection
+	private FigureSelection figureSelection = new FigureSelection();
 
-	//Grupos de figuras agrupadas
-	FigureGroups figureGroups = new FigureGroups();
+	//Grouped figures collection
+	private FigureGroups figureGroups = new FigureGroups();
 
 	//StatusBar
-	StatusPane statusPane;
+	private StatusPane statusPane;
 
 	//EffectsBar
 	EffectsPane effectsPane = new EffectsPane();
 
-	//Verdadero si se estaban moviendo figuras
+	//True if was moving figures
 	private boolean wasMoving;
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
+
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
@@ -85,7 +87,7 @@ public class PaintPane extends BorderPane {
 			tool.setCursor(Cursor.HAND);
 		}
 
-		//Crea la barra de herramientas
+		//Toolbox bar
 		VBox toolsBox = new VBox(10);
 		toolsBox.getChildren().addAll(toolsArr);
 		toolsBox.getChildren().add(fillColorPicker);
@@ -94,28 +96,28 @@ public class PaintPane extends BorderPane {
 		toolsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
-		//Crea las figuras adecuadas al tocar sus respectivos botones
+		//Figure creation from buttons
 		rectangleButton.setUserData(new RectangleButton(this, canvasState));
 		squareButton.setUserData(new SquareButton(this,canvasState));
 		circleButton.setUserData(new CircleButton(this, canvasState));
 		ellipseButton.setUserData(new EllipseButton(this, canvasState));
 
-		//Métodos para acciones del mouse
+		//Mouse action methods
 		canvas.setOnMousePressed(this::onMousePressed);
 		canvas.setOnMouseReleased(this::onMouseRelease);
 		canvas.setOnMouseMoved(this::onMouseMoved);
 		canvas.setOnMouseDragged(this::onMouseDragged);
 
-		//Método que define las acciones de los botones
+		//Button actions methods
 		setButtons();
 
-		//Posiciono el canvas, la barra de efectos y las herramientas
+		//Tools canvas and effects positioning
 		setTop(effectsPane);
 		setLeft(toolsBox);
 		setRight(canvas);
 	}
 
-	//Cuando se presiona el mouse, se crea un punto
+	//When mouse is pressed a startPoint is created
 	private void onMousePressed(MouseEvent mouseEvent) {
 		startPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 	}
@@ -129,11 +131,11 @@ public class PaintPane extends BorderPane {
 		Toggle selectedButton = tools.getSelectedToggle();
 		if(selectedButton == null) return;
 
-		//Caso: El botón de selección está marcado
+		//Case: selection button is pressed
 		if(selectedButton == selectionButton) {
 			Figure foundFigure = canvasState.getTopFigureAt(endPoint);
 
-			//Caso: Se estaban moviendo figuras (por lo que al liberar el click fuera de una figura se sale de la selección)
+			//Case:Was moving figures (if click is outside the figures, they are de-selected)
 			if(wasMoving) {
 				if(foundFigure == null) {
 					wasMoving = false;
@@ -143,53 +145,54 @@ public class PaintPane extends BorderPane {
 				return;
 			}
 
-			//Caso: No se estaban moviendo figuras
+			//Case: Was NOT moving figures
 			else {
-				//Caso: Se dibuja un rectángulo contenedor
+				//Case: Container rectangle selection
 				if(startPoint.distanceTo(endPoint) > 1) {
 					Rectangle container = Rectangle.createFrom(startPoint, endPoint);
 					canvasState.figuresContainedIn(container, figureSelection);
 
-					//Caso: No hay figuras
+					//Case: No figures found
 					if (figureSelection.isEmpty()) statusPane.updateStatusGivenSelection(figureSelection);
 
-					//Caso: Hay una o más
+					//Case: There is one or more figures found
 					else {
 						for (Figure figure : figureSelection) {
-							//Caso: Una figura pertenece a un grupo (agrego todas las de dicho grupo)
-							if (figureGroups.findGroup(figure) != null) {					//todo esto podría ser una función
+							//Case: Figure belongs to a group (group is added to selection)
+							if (figureGroups.findGroup(figure) != null) {
 								figureSelection.addAll(figureGroups.findGroup(figure));
 							}
 							else figureSelection.add(figure);
 						}
 						statusPane.updateStatusGivenSelection(figureSelection);
+						//todo acá poner que se modifican los checkbox
 					}
 				}
-				//Caso: Se hace click
+				//Case: Click selection
 				else {
-					//Caso: No hay ninguna figura
+					//Case: Figures found
 					if(foundFigure != null) {
 						if(!figureSelection.isEmpty()) {
 							figureSelection.clear();
 							redrawCanvas();
 						}
 
-						//Caso: La figura pertenece a un grupo
-						if (figureGroups.findGroup(foundFigure) != null) {				//todo esto podría ser una función (se repite acá)
+						//Case: Figure belongs to a group
+						if (figureGroups.findGroup(foundFigure) != null) {
 							figureSelection.addAll(figureGroups.findGroup(foundFigure));
 						}
 
-						//Caso: La figura no pertenece a un grupo
+						//Case: Figure does not belong to a group
 						else figureSelection.add(foundFigure);
 
 						statusPane.updateStatusGivenSelection(figureSelection);
 					}
-					//Caso: No hay ninguna figura
+					//Case: No figures found.
 					else figureSelection.clear();
 				}
 			}
 		}
-		//Caso: El botón de selección no está marcado (se crea una figura)
+		//Caso: No selection button is pressed (figure creation)
 		else ((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 
 		redrawCanvas();
@@ -199,7 +202,7 @@ public class PaintPane extends BorderPane {
 		if(figureSelection.isEmpty()) {
 			Point eventPoint = new Point(mouseEvent.getX(), mouseEvent.getY());
 			Figure topFigure = canvasState.getTopFigureAt(eventPoint);
-			//Si hay una figura, muestra su información (y si no las coordenadas)
+			//Figure information or coordinates shown
 			statusPane.updateStatus(topFigure == null ? eventPoint.toString() : topFigure.toString());
 		}
 	}
@@ -221,7 +224,7 @@ public class PaintPane extends BorderPane {
 		for(Figure figure : canvasState) {
 			if(figure.hasShadow()) figure.addShadow(gc);
 			if(figure.hasBevel()) figure.addBevel(gc);
-			//Si la figura estaba seleccionada, le pone el borde rojo (y si no le pone el borde negro)
+			//Red border if figure is selected (otherwise back border)
 			gc.setStroke(figureSelection.contains(figure) ? DEFAULT_SELECTED_LINE_COLOR : DEFAULT_LINE_COLOR);
 			figure.draw(gc);
 		}
@@ -242,21 +245,21 @@ public class PaintPane extends BorderPane {
 	}
 
 	private void setButtons() {
-		//Botón para borrar
+		//figures deletion
 		deleteButton.setOnAction(event -> {
 			canvasState.removeAll(figureSelection);
 			resetSelection();
 			deleteButton.setSelected(false);
 		});
 
-		//Botón para agrupar
+		//figure grouping
 		groupButton.setOnAction(event -> {
 			figureGroups.group(figureSelection, canvasState);
 			groupButton.setSelected(false);
 			selectionButton.setSelected(true);
 		});
 
-		//Botón para desagrupar
+		//figure degrouping
 		ungroupButton.setOnAction(event -> {
 			figureGroups.ungroup(figureSelection);
 			resetSelection();
@@ -266,7 +269,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//Botón para rotar a la derecha
+		//figure rotation
 		rotateRightButton.setOnAction(event -> {
 			rotateRightButton.setSelected(false);
 			figureSelection.rotateRight();
@@ -274,7 +277,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//Botón para rotar horizontalmente
+		//figure flipping (horizontal)
 		flipHorizontallyButton.setOnAction(event -> {
 			flipHorizontallyButton.setSelected(false);
 			figureSelection.flipHorizontally();
@@ -282,7 +285,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//Botón para rotar verticalmente
+		//figure flipping (vertical)
 		flipVerticallyButton.setOnAction(event -> {
 			flipVerticallyButton.setSelected(false);
 			figureSelection.flipVertically();
@@ -290,7 +293,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//Botón para aumentar el tamaño de la figura
+		//Size augmentation
 		scaleUpButton.setOnAction(event -> {
 			scaleUpButton.setSelected(false);
 			figureSelection.scale(DEFAULT_SCALE_PERCENT);
@@ -298,7 +301,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//Botón para disminuir el tamaño de la figura
+		//Size reduction
 		scaleDownButton.setOnAction(event -> {
 			scaleDownButton.setSelected(false);
 			figureSelection.scale(-DEFAULT_SCALE_PERCENT);
@@ -306,20 +309,20 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//Botón para crear un rectángulo
+		//Rectangle
 		rectangleButton.setOnAction(event -> resetSelection());
 
-		//Botón para crear un cuadrado
+		//Square
 		squareButton.setOnAction(event -> resetSelection());
 
-		//Botón para crear un elipse
+		//Ellipse
 		ellipseButton.setOnAction(event -> resetSelection());
 
-		//Botón para crear un círculo
+		//Circle
 		circleButton.setOnAction(event -> resetSelection());
 	}
 
-	//Clase que compone al panel de efectos superior
+	//Upper effects pannel class
 	private class EffectsPane extends HBox {
 		final Label label = new Label("Efectos:\t");
 		final CheckBox shadeBox = new CheckBox("Sombra");

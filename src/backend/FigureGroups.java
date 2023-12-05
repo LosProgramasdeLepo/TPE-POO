@@ -7,13 +7,13 @@ import java.util.HashSet;
 public class FigureGroups extends HashSet<FigureSelection> {
 
     public void group(FigureSelection figureSelection, CanvasState canvasState) {
-        //si ya está en algún grupo alguna de las figuras, no hago un nuevo grupo
+        //If already belongs to a group, no new group is created
         for(Figure figure : figureSelection){
             if(this.findGroup(figure) != null) {
                 return;
             }
         }
-        // si no existe, creo una nueva colección y las agrego
+        // If not, a new group is created and figures are added
         FigureSelection newFigureGroup = new FigureSelection();
         for(Figure figure : figureSelection){
             if(canvasState.contains(figure)) {

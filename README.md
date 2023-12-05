@@ -12,12 +12,12 @@ Trabajo Final de Programación Orientada a Objetos. 2Q2023
   * Sombras (hecho)
   * Gradiente (hecho)
 * Funcionalidad 3
-  * Girar 
+  * Girar (hecho)
   * Voltear (hecho)
   * Escalar (hecho)
-## Hecho:
+* Informe
 
 ## Modificaciones/Mejoras:
-* Emprolijamiento general de EffectsPane, está muy feo.
-* Falta ver que mantenga el color del borde si está seleccionado cuando aplico un efecto.
 * Falta ver bien lo de los botones de efecto cuando uno selecciona alguna/s figura/s
+* Implementar threestate checkbox
+* Implementar las alertas en el group/degroup
