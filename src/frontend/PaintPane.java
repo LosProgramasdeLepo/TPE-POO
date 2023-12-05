@@ -240,7 +240,6 @@ public class PaintPane extends BorderPane {
 			if(figure.hasShadow()) figure.addShadow(gc);
 			if(figure.hasBevel()) figure.addBevel(gc);
 			//Red border if figure is selected (otherwise back border)
-			System.out.println(figureSelection.contains(figure)); //todo
 			gc.setStroke(figureSelection.contains(figure) ? DEFAULT_SELECTED_LINE_COLOR : DEFAULT_LINE_COLOR);
 			figure.draw(gc);
 		}
@@ -252,11 +251,11 @@ public class PaintPane extends BorderPane {
 		redrawCanvas();
 	}
 
-	public StatusPane getStatusPane(){
+	public StatusPane getStatusPane() {
 		return this.statusPane;
 	}
 
-	public Color getColorFromPicker(){
+	public Color getColorFromPicker() {
 		return fillColorPicker.getValue();
 	}
 
@@ -374,6 +373,7 @@ public class PaintPane extends BorderPane {
                     if(new_val) figureSelection.modifyShadow(true);
                     if(!new_val) figureSelection.modifyShadow(false);
                 }
+				System.out.println(figureSelection);
                 redrawCanvas();
             });
 

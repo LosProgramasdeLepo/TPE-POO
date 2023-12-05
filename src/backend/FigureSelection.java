@@ -25,8 +25,8 @@ public class FigureSelection extends HashSet<Figure> implements Movable, Transfo
             figure.modifyBevel(status);
         }
     }
-    @Override
 
+    @Override
     public void rotateRight() {
         for(Figure figure : this) {
             figure.rotateRight();

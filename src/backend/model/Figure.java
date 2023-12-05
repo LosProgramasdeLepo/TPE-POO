@@ -93,7 +93,7 @@ public abstract class Figure implements Movable, Drawable, Effects, Transformabl
 
     @Override
     public int hashCode() {
-       return Objects.hash(Arrays.hashCode(points), bevel, shadow, gradient, fillColor);
+       return Objects.hash(Arrays.hashCode(points), fillColor);
    }
 
 }
