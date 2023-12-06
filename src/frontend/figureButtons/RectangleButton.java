@@ -13,7 +13,7 @@ public class RectangleButton extends FigureButton {
     }
 
     @Override
-    public Figure createFigure(Point startPoint, Point endPoint) {
+    public Rectangle createFigure(Point startPoint, Point endPoint) {
         return Rectangle.createFrom(startPoint,endPoint);
     }
 

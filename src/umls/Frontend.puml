@@ -1,0 +1,127 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package frontend{
+package figureButtons{
+
+abstract class FigureButton{
+    # {final} PaintPane paintPane
+    # {final} CanvasState canvasState
+    + FigureButton(PaintPane paintPane, CanvasState canvasState)
+    + void createAndAddFigure(Point startPoint, Point endPoint)
+    + {abstract} Figure createFigure(Point startPoint, Point endPoint)
+}
+class RectangleButton extends FigureButton{
+    + RectangleButton(PaintPane paintPane, CanvasState canvasState)
+    + Rectangle createFigure(Point startPoint, Point endPoint)
+}
+class SquareButton extends RectangleButton{
+    + SquareButton(PaintPane paintPane, CanvasState canvasState)
+    + Square createFigure(Point startPoint, Point endPoint)
+}
+class EllipseButton extends FigureButton{
+    + EllipseButton(PaintPane paintPane, CanvasState canvasState)
+    + Ellipse createFigure(Point startPoint, Point endPoint)
+}
+class CircleButton extends EllipseButton{
+    + CircleButton(PaintPane paintPane, CanvasState canvasState)
+    + Circle createFigure(Point startPoint, Point endPoint)
+}
+
+}
+
+class StatusPane extends javafx.scene.layout.BorderPane{
+    - final Label statusLabel
+    + StatusPane()
+    + void updateStatus(String text)
+    + void updateStatusGivenSelection(FigureSelection figureSelection)
+}
+class MainFrame extends javafx.scene.layout.BorderPane{
+    + MainFrame(CanvasState canvasState)
+}
+class AppMenuBar extends javafx.scene.control.MenuBar{
+    + AppMenuBar()
+    - {static} getMenuItem()
+}
+class AppLauncher extends javafx.application.Application{
+    + {static} void main(String[] args)
+    + void start(Stage primaryStage)
+}
+AppLauncher *-- AppMenuBar
+AppLauncher *-- MainFrame
+
+class PaintPane extends javafx.scene.layout.BorderPane{
+    - {final} Color DEFAULT_LINE_COLOR
+    - {final} Color DEFAULT_FILL_COLOR
+    - {final} Color DEFAULT_SELECTED_LINE_COLOR
+    - {final} double DEFAULT_SCALE_PERCENT
+    - CanvasState canvasState
+    - Canvas canvas
+    - GraphicsContext gc
+    - final ToggleButton selectionButton
+    - final ToggleButton rectangleButton
+    - final ToggleButton circleButton
+    - final ToggleButton squareButton
+    - final ToggleButton ellipseButton
+    - final ToggleButton deleteButton
+    - final ToggleButton groupButton
+    - final ToggleButton ungroupButton
+    - final ToggleButton rotateRightButton
+    - final ToggleButton flipHorizontallyButton
+    - final ToggleButton flipVerticallyButton
+    - final ToggleButton scaleUpButton
+    - final ToggleButton scaleDownButton
+    - final ToggleGroup tools
+    - final ColorPicker fillColorPicker
+    - Point startPoint
+    - final FigureSelection figureSelection
+    - final FigureGroups figureGroups
+    - final StatusPane statusPane
+    - EffectsPane effectsPane
+    - boolean wasMoving
+    + PaintPane(CanvasState canvasState, StatusPane statusPane)
+    + StatusPane getStatusPane()
+    + Color getColorFromPicker()
+    + boolean getCanvasShadow()
+    + boolean getCanvasGradient()
+    + boolean getCanvasBevel()
+    - void onMousePressed(MouseEvent mouseEvent)
+    - void onMouseRelease(MouseEvent mouseEvent)
+    - void onMouseMoved(MouseEvent mouseEvent)
+    - void onMouseDragged (MouseEvent mouseEvent)
+    - void onMouseDragged(MouseEvent mouseEvent)
+    - void redrawCanvas()
+    - void resetSelection()
+    - setButtons()
+
+
+
+
+
+}
+PaintPane *-- StatusPane
+class EffectsPane extends javafx.scene.layout.HBox {
+    - final Label label
+    - final CheckBox shadowBox
+    - final CheckBox gradientBox
+    - final CheckBox bevelBox
+    - final CheckBox[] effectsArr
+    + EffectsPane()
+    - void getFigureEffects(FigureSelection figureSelection)
+    - void getSelectionEffects(Figure figure)
+    - void getSelectionEffects(FigureSelection figureSelection)
+    - void clearIndeterminate()
+}
+PaintPane *-- EffectsPane
+note top of EffectsPane
+  Private class in <b> PaintPane</b>
+end note
+
+
+
+
+
+
+}
+
+@enduml

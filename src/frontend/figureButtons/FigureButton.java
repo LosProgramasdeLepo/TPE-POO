@@ -14,7 +14,7 @@ public abstract class FigureButton {
         this.paintPane = paintPane;
     }
 
-    public void createAndAddFigure(Point startPoint, Point endPoint, PaintPane paintPane) {
+    public void createAndAddFigure(Point startPoint, Point endPoint) {
         try {
             Figure newFigure = createFigure(startPoint, endPoint);
             canvasState.add(newFigure);

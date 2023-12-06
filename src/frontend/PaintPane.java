@@ -22,11 +22,11 @@ import javafx.scene.paint.Color;
 public class PaintPane extends BorderPane {
 
 	//BackEnd
-	CanvasState canvasState;
+	private CanvasState canvasState;
 
 	//Canvas
-	Canvas canvas = new Canvas(800, 600);
-	GraphicsContext gc = canvas.getGraphicsContext2D();
+	private Canvas canvas = new Canvas(800, 600);
+	private GraphicsContext gc = canvas.getGraphicsContext2D();
 
 	//Constants
 	private final Color DEFAULT_LINE_COLOR = Color.BLACK;
@@ -35,20 +35,20 @@ public class PaintPane extends BorderPane {
 	private final double DEFAULT_SCALE_PERCENT = 0.25;
 
 	//Left bar buttons
-	final ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	final ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-	final ToggleButton circleButton = new ToggleButton("Círculo");
-	final ToggleButton squareButton = new ToggleButton("Cuadrado");
-	final ToggleButton ellipseButton = new ToggleButton("Elipse");
-	final ToggleButton deleteButton = new ToggleButton("Borrar");
-	final ToggleButton groupButton = new ToggleButton("Agrupar");
-	final ToggleButton ungroupButton = new ToggleButton("Desagrupar");
-	final ToggleButton rotateRightButton = new ToggleButton("Girar D");
-	final ToggleButton flipHorizontallyButton = new ToggleButton("Voltear H");
-	final ToggleButton flipVerticallyButton = new ToggleButton("Voltear V");
-	final ToggleButton scaleUpButton = new ToggleButton("Escalar +");
-	final ToggleButton scaleDownButton = new ToggleButton("Escalar -");
-	final ToggleGroup tools = new ToggleGroup();
+	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
+	private final ToggleButton rectangleButton = new ToggleButton("Rectángulo");
+	private final ToggleButton circleButton = new ToggleButton("Círculo");
+	private final ToggleButton squareButton = new ToggleButton("Cuadrado");
+	private final ToggleButton ellipseButton = new ToggleButton("Elipse");
+	private final ToggleButton deleteButton = new ToggleButton("Borrar");
+	private final ToggleButton groupButton = new ToggleButton("Agrupar");
+	private final ToggleButton ungroupButton = new ToggleButton("Desagrupar");
+	private final ToggleButton rotateRightButton = new ToggleButton("Girar D");
+	private final ToggleButton flipHorizontallyButton = new ToggleButton("Voltear H");
+	private final ToggleButton flipVerticallyButton = new ToggleButton("Voltear V");
+	private final ToggleButton scaleUpButton = new ToggleButton("Escalar +");
+	private final ToggleButton scaleDownButton = new ToggleButton("Escalar -");
+	private final ToggleGroup tools = new ToggleGroup();
 
 	//Selector de color de relleno
 	private final ColorPicker fillColorPicker = new ColorPicker(DEFAULT_FILL_COLOR);
@@ -66,7 +66,7 @@ public class PaintPane extends BorderPane {
 	private final StatusPane statusPane;
 
 	//EffectsBar
-	EffectsPane effectsPane = new EffectsPane();
+	private EffectsPane effectsPane = new EffectsPane();
 
 	//True if was moving figures
 	private boolean wasMoving;
@@ -205,7 +205,7 @@ public class PaintPane extends BorderPane {
 			}
 		}
 		//Caso: No selection button is pressed (figure creation)
-		else ((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint, this);
+		else ((FigureButton) selectedButton.getUserData()).createAndAddFigure(startPoint, endPoint);
 
 		redrawCanvas();
 	}
@@ -347,11 +347,11 @@ public class PaintPane extends BorderPane {
 	//Upper effects panel class
 	private class EffectsPane extends HBox {
 
-		final Label label = new Label("Efectos:\t");
-		final CheckBox shadowBox = new CheckBox("Sombra");
-		final CheckBox gradientBox = new CheckBox("Gradiente");
-		final CheckBox bevelBox = new CheckBox("Biselado");
-		final CheckBox[] effectsArr = {shadowBox, gradientBox, bevelBox};
+		private final Label label = new Label("Efectos:\t");
+		private final CheckBox shadowBox = new CheckBox("Sombra");
+		private final CheckBox gradientBox = new CheckBox("Gradiente");
+		private final CheckBox bevelBox = new CheckBox("Biselado");
+		private final CheckBox[] effectsArr = {shadowBox, gradientBox, bevelBox};
 
 		public EffectsPane() {
 			for (CheckBox effect : effectsArr) {
@@ -392,13 +392,13 @@ public class PaintPane extends BorderPane {
 
 		}
 
-		void getFigureEffects(Figure figure) {
+		private void getFigureEffects(Figure figure) {
 			effectsPane.shadowBox.setSelected(figure.hasShadow());
 			effectsPane.gradientBox.setSelected(figure.hasGradient());
 			effectsPane.bevelBox.setSelected(figure.hasBevel());
 		}
 
-		void getSelectionEffects(FigureSelection figureSelection) {
+		private void getSelectionEffects(FigureSelection figureSelection) {
 			if(figureSelection.atLeastOneHasShadow() && !figureSelection.hasShadow()) effectsPane.shadowBox.setIndeterminate(true);
 			else effectsPane.shadowBox.setSelected(figureSelection.hasShadow());
 			if(figureSelection.atLeastOneHasGradient() && !figureSelection.hasGradient()) effectsPane.gradientBox.setIndeterminate(true);
@@ -408,7 +408,7 @@ public class PaintPane extends BorderPane {
 		}
 
 		//Necessary for removing the indeterminate status from the checkboxes
-		void clearIndeterminate() {
+		private void clearIndeterminate() {
 			effectsPane.shadowBox.setIndeterminate(false);
 			effectsPane.gradientBox.setIndeterminate(false);
 			effectsPane.bevelBox.setIndeterminate(false);

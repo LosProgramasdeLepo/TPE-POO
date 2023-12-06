@@ -1,6 +1,178 @@
 @startuml
 'https://plantuml.com/class-diagram
+package backend{
+package model{
+interface Effects{
+void addShadow(GraphicsContext gc)
+void addBevel(GraphicsContext gc)
+void addGradient (GraphicsContext gc)
+boolean hasShadow()
+boolean hasBevel()
+boolean hasGradient()
+}
+interface Transformable <T extends Movable>{
+    void rotateRight()
+    void flipHorizontally()
+    void flipVertically()
+    void scale(double percent)
+}
 
+class Point implements Movable {
+    - double x
+    - double y
+    + void move()
+    + double getX()
+    + double getY()
+    + String toString()
+}
+
+Figure *-- Point
+
+abstract class Figure implements Movable, Drawable, Transformable,Effects {
+    - boolean shadow
+    - boolean bevel
+    - boolean gradient
+    - Color fillColor
+    - Point[] points
+    # isInvertedH
+    # isInvertedV
+    # Figure(Point[] points)
+    + Color getFillColor()
+    + void setFillColor(Color fillColor)
+    + {abstract} boolean figureBelongs(Point eventPoint)
+    + {abstract} boolean isContainedIn(Rectangle rectangle)
+    + {abstract} draw (GraphicsContext gc)
+    + {abstract} void addShadow(GraphicsContext gc)
+    + {abstract} void addBevel (GraphicsContext gc)
+    + {abstract} void rotateRight()
+    + {abstract} void flipHorizontally()
+    + {abstract} void flipVertically()
+    + {abstract} void scale(double percent)
+    + int hashCode()
+    + void addGradient (GraphicsContext gc)
+    + boolean hasShadow()
+    + boolean hasBevel()
+    + boolean hasGradient()
+    + void modifyShadow()
+    + void modifyBevel()
+    + void modifyGradient()
+    + void move(double deltaX, double deltaY)
+}
+
+class Rectangle extends Figure {
+    - Point topLeft
+    - Point bottomRight
+    + Rectangle(Point topLeft, Point bottomRight)
+    + Point getTopLeft()
+    + Point getBottomRight()
+    - getWidth()
+    - getHeight()
+    + void draw(GraphicsContext gc)
+    + boolean figureBelongs(Point eventPoint)
+    + boolean isContainedIn(Rectangle rectangle)
+    + {static} Rectangle createFrom(Point startPoint, Point endPoint)
+    + String toString()
+    + void addShadow (GraphicsContext gc)
+    + void addBevel (GraphicsContext gc)
+    + void rotateRight()
+    + void flipHorizontally()
+    +void flipVertically()
+    + void scale(double percent)
+
+}
+
+class Square extends Rectangle {
+    + Square(Point topLeft, double size)
+    + String toString()
+    + {static} Square createFrom(Point startPoint, Point endPoint)
+}
+
+class Ellipse extends Figure {
+    - Point centerPoint
+    - double sMayorAxis
+    - double sMinorAxis
+    + Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis)
+    + Point getCenterPoint()
+    + double getMayorAxis()
+    + double getMinorAxis()
+    + void draw (GraphicsContext gc)
+    + boolean figureBelongs(Point eventPoint)
+    + boolean isContainedIn(Rectangle rectangle)
+    + String toString()
+    + {static} Ellipse createFrom(Point startPoint, Point endPoint)
+    + void addShadow()
+    + void addBevel()
+    + void rotateRight()
+    + void flipVertically()
+    + void flipHorizontally()
+    + void scale(double percent)
+    - double getXRadius()
+    - double getYRadius()
+}
+
+class Circle extends Ellipse {
+   + Circle(Point centerPoint, double radius)
+   + double getRadius()
+   + boolean figureBelongs(Point eventPoint)
+   + {static} Circle createFrom(Point startPoint, Point endPoint)
+   + String toString()
+}
+
+interface Movable {
+    + void move()
+}
+
+interface Drawable {
+    + void draw(GraphicsContext gc)
+}
+}
+
+class CanvasState extends java.List.ArrayList{
+    + Figure getTopFigureAt(Point point)
+    + void figuresContainedIn(Rectangle rectangle, FigureSelection figureSelection)
+    + Figure getFigure(Figure figure)
+}
+note top of CanvasState
+  Extends <b>ArrayList<Figure></b>
+end note
+class FigureSelection extends java.Set.HashSet implements Movable, Transformable{
+    + void modifyShadow(boolean status)
+    + void modifyBevel(boolean status)
+    + void modifyGradient(boolean status)
+    + void rotateRight()
+    + void flipHorizontally()
+    + void flipVertically()
+    + void scale(double percent)
+    + void move(double deltaX, double deltaY)
+    + boolean hasShadow()
+    + boolean hasBevel()
+    + boolean hasGradient()
+    + boolean atLeastOneHasShadow()
+    + boolean atLeastOneHasBevel()
+    + boolean atLeastOneHasGradient()
+}
+note bottom of FigureSelection
+  Extends <b>HashSet<Figure></b>
+end note
+CanvasState *-- FigureSelection
+Figure *--FigureSelection
+
+class FigureGroups extends java.Set.HashSet{
+    + void group(FigureSelection figureSelection, CanvasState canvasState)
+    + void ungroup(FigureSelection figureSelection)
+    + FigureSelection findGroup(Figure figure)
+
+
+}
+note top of FigureGroups
+  Extends <b>HashSet<FigureSelection></b>
+end note
+
+FigureSelection *-- FigureGroups
+
+
+
+}
 
 
 @enduml
