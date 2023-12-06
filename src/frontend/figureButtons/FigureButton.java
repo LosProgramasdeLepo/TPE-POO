@@ -5,13 +5,15 @@ import backend.model.*;
 import frontend.PaintPane;
 
 public abstract class FigureButton {
+
     protected final PaintPane paintPane;
     protected final CanvasState canvasState;
 
-    public FigureButton(PaintPane paintPane, CanvasState canvasState){
+    public FigureButton(PaintPane paintPane, CanvasState canvasState) {
         this.canvasState = canvasState;
         this.paintPane = paintPane;
     }
+
     public void createAndAddFigure(Point startPoint, Point endPoint, PaintPane paintPane) {
         try {
             Figure newFigure = createFigure(startPoint, endPoint);
@@ -24,6 +26,7 @@ public abstract class FigureButton {
             paintPane.getStatusPane().updateStatus(e.getMessage());
         }
     }
+
     public abstract Figure createFigure(Point startPoint, Point endPoint);
 
 }

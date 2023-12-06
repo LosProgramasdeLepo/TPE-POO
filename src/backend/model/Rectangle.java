@@ -139,7 +139,6 @@ public class Rectangle extends Figure {
 
 
     @Override
-
     public void scale(double percent) {
         double deltaX = (percent/2) * getWidth();
         double deltaY = (percent/2) * getHeight();

@@ -19,6 +19,10 @@ public abstract class Figure implements Movable, Drawable, Effects, Transformabl
         gradient = false;
     }
 
+    public abstract boolean figureBelongs(Point eventPoint);
+
+    public abstract boolean isContainedIn(Rectangle rectangle);
+
     public Color getFillColor() {
         return fillColor;
     }
@@ -26,10 +30,6 @@ public abstract class Figure implements Movable, Drawable, Effects, Transformabl
     public void setFillColor(Color fillColor) {
         this.fillColor = fillColor;
     }
-
-    public abstract boolean figureBelongs(Point eventPoint);
-
-    public abstract boolean isContainedIn(Rectangle rectangle);
 
     @Override
     public void move(double deltaX, double deltaY) {
@@ -40,18 +40,18 @@ public abstract class Figure implements Movable, Drawable, Effects, Transformabl
 
     @Override
     public abstract void draw(GraphicsContext gc);
-    @Override
 
+    @Override
     public boolean hasShadow() {
         return shadow;
     }
-    @Override
 
+    @Override
     public boolean hasBevel() {
         return bevel;
     }
-    @Override
 
+    @Override
     public boolean hasGradient() {
         return gradient;
     }
