@@ -81,7 +81,7 @@ public class FigureSelection extends HashSet<Figure> implements Movable, Transfo
 
     public boolean hasGradient() {
         for(Figure figure : this) {
-            if(!figure.hasBevel()) {
+            if(!figure.hasGradient()) {
                 return false;
             }
         }
